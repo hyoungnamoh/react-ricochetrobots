@@ -1,62 +1,67 @@
 export const walls =
     [
         {
-            position: [0, 3],
+            index: [0, 3],
             right: true,
         },
         {
-            position: [0, 4],
+            index: [0, 4],
             left: true,
         },
         {
-            position: [0, 9],
+            index: [0, 11],
             right: true,
         },
         {
-            position: [0, 10],
+            index: [0, 12],
             left: true,
         },
         {
-            position: [1, 0],
+            index: [0, 13],
+            bottom: true,
+        },
+        {
+            index: [1, 5],
             right: true,
         },
         {
-            position: [1, 1],
+            index: [1, 6],
             left: true,
             bottom: true,
         },
         {
-            position: [1, 6],
-            bottom: true,
-        },
-        {
-            position: [1, 13],
-            right: true,
-            bottom: true,
-        },
-        {
-            position: [1, 15],
-            bottom: true,
-        },
-        {
-            position: [2, 6],
-            top: true,
+            index: [1, 12],
             right: true,
         },
         {
-            position: [2, 7],
+            index: [1, 13],
             left: true,
-        },
-        {
-            position: [2, 9],
-            bottom: true,
-        },
-        {
-            position: [2, 13],
             top: true,
         },
         {
-            position: [2, 15],
+            index: [2, 1],
+            bottom: true,
+        },
+        {
+            index: [2, 6],
             top: true,
         },
+        {
+            index: [2, 9],
+            right: true,
+            bottom: true,
+        },
+        {
+            index: [3, 1],
+            right: true,
+        },
+        {
+            index: [3, 2],
+            left: true,
+        },
+        {
+            index: [3, 5],
+            bottom: true,
+        },
+
     ]

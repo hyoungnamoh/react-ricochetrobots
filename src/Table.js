@@ -1,12 +1,13 @@
 import React from 'react';
 import Tr from './Tr';
 
-const Table = ({tableData}) => {
-    
+const Table = ({tableData, wallInfo}) => {
+    // console.log(tableData);
+    // const col = Array(tableData.col).fill();
     return (
             <table>
-                {tableData.map((index) => (
-                    <Tr tableData={tableData} rowData={index}/>
+                {tableData.map((item, index) => (
+                    <Tr colData={item} colIndex={index} tableData={tableData}/>
                 ))}
             </table>
     );

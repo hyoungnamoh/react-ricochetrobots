@@ -1,12 +1,12 @@
 import React from 'react';
 import Td from './Td';
 
-const Tr = ({ tableData, rowData }) => {
+const Tr = ({ colData, colIndex, tableData }) => {
     return (
         <>
             <tr>
-                {tableData.map(() => (
-                    <Td tableData={tableData} />
+                {colData.map((item, index) => (
+                    <Td rowData={item} rowIndex={index} tableData={tableData} colData={colData} colIndex={colIndex}/>
                 ))}
             </tr>
         </>
