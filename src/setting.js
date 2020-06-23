@@ -1,3 +1,25 @@
+export const initRobotPosition = (options) => {
+    const colIndex = Array(15).fill().map((v, i) => i + 1);
+    const rowIndex = Array(15).fill().map((v, i) => i + 1);
+    const positionsArray = [];
+    for(let i = 0; i < 4; i++) {
+        let position = [];
+        const col = colIndex.splice(Math.floor(Math.random() * colIndex.length), 1)[0];
+        const row = rowIndex.splice(Math.floor(Math.random() * rowIndex.length), 1)[0];
+        // const col = 7;
+        // const row = 7;
+        if((col === 7 && row === 7) || (col === 7 && row === 8) || (col === 8 && row === 7) || (col === 8 && row === 8)) {
+            --i;
+            continue;
+        }
+        position.push(col);
+        position.push(row);
+
+        positionsArray.push(position);
+        // rowIndex.splice(Math.floor(Math.random() * rowIndex.length);
+    }
+    return positionsArray;
+}
 export const walls =
     [
         {
