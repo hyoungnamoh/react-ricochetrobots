@@ -63,5 +63,168 @@ export const walls =
             index: [3, 5],
             bottom: true,
         },
+        {
+            index: [3, 9],
+            top: true,
+        },
+        {
+            index: [3, 15],
+            bottom: true,
+        },
+        {
+            index: [4, 4],
+            right: true,
+        },
+        {
+            index: [4, 5],
+            left: true,
+            top: true,
+        },
+        {
+            index: [4, 15],
+            top: true,
+        },
+        {
+            index: [5, 2],
+            bottom: true,
+            right: true,
+        },
+        {
+            index: [5, 7],
+            bottom: true,
+            right: true,
+        },
+        {
+            index: [5, 11],
+            bottom: true,
+        },
+        {
+            index: [5, 13],
+            right: true,
+        },
+        {
+            index: [5, 14],
+            left: true,
+            bottom: true,
+        },
+        {
+            index: [6, 0],
+            bottom: true,
+        },
+        {
+            index: [6, 2],
+            top: true,
+        },
+        {
+            index: [6, 7],
+            top: true,
+            bottom: true,
+        },
+        {
+            index: [6, 8],
+            bottom: true,
+        },
+        {
+            index: [6, 11],
+            top: true,
+            right: true,
+        },
+        {
+            index: [6, 14],
+            top: true,
+        },
+        {
+            index: [7, 0],
+            top: true,
+        },
+        {
+            index: [7, 6],
+            right: true,
+        },
+        {
+            index: [7, 9],
+            left: true,
+        },
+        {
+            index: [8, 1],
+            bottom: true,
+        },
+        {
+            index: [8, 5],
+            bottom: true,
+        },
+        {
+            index: [8, 6],
+            right: true,
+        },
+        {
+            index: [8, 9],
+            left: true,
+        },
+        {
+            index: [9, 1],
+            right: true,
+        },
+        {
+            index: [9, 2],
+            left: true,
+        },
+        {
+            index: [9, 4],
+            right: true,
+        },
+        {
+            index: [9, 5],
+            left: true,
+            top: true,
+        },
+        {
+            index: [9, 7],
+            top: true,
+        },
+        {
+            index: [9, 8],
+            top: true,
+        },
+        {
+            index: [9, 15],
+            bottom: true,
+        },
+        {
+            index: [10, 8],
+            bottom: true,
+            right: true,
+        },
+        {
+            index: [10, 9],
+            bottom: true,
+            left: true,
+        },
+        {
+            index: [10, 13],
+            bottom: true,
+        },
+        {
+            index: [10, 15],
+            top: true,
+        },
+        {
+            index: [11, 0],
+            top: true,
+        },
+        {
+            index: [11, 8],
+            top: true,
+        },
+        {
+            index: [11, 12],
+            right: true,
+        },
+        {
+            index: [11, 13],
+            left: true,
+            top: true,
+        },
+        
 
     ]
