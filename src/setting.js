@@ -197,7 +197,6 @@ export const walls =
         },
         {
             index: [10, 9],
-            bottom: true,
             left: true,
         },
         {
@@ -225,6 +224,68 @@ export const walls =
             left: true,
             top: true,
         },
-        
-
+        {
+            index: [12, 6],
+            bottom: true,
+            right: true,
+        },
+        {
+            index: [12, 7],
+            left: true,
+        },
+        {
+            index: [13, 6],
+            top: true,
+        },
+        {
+            index: [13, 8],
+            right: true,
+        },
+        {
+            index: [13, 9],
+            left: true,
+            bottom: true,
+        },
+        {
+            index: [13, 14],
+            bottom: true,
+        },
+        {
+            index: [14, 1],
+            right: true,
+        },
+        {
+            index: [14, 2],
+            left: true,
+            bottom: true,
+        },
+        {
+            index: [14, 9],
+            top: true,
+        },
+        {
+            index: [14, 14],
+            top: true,
+            right: true,
+        },
+        {
+            index: [14, 15],
+            left: true,
+        },
+        {
+            index: [15, 5],
+            right: true,
+        },
+        {
+            index: [15, 5],
+            left: true,
+        },
+        {
+            index: [15, 11],
+            right: true,
+        },
+        {
+            index: [15, 11],
+            left: true,
+        },
     ]
