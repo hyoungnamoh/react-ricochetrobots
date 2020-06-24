@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import Table from './Table';
-import { initRobotPosition } from './setting';
+import { initRobotPosition, walls } from './setting';
+
 
 const initialState = {
     tableData: Array(16).fill('').map(() => Array(16).fill('')),
@@ -11,19 +12,21 @@ const initialState = {
       bottom: false,
     },
     robotPositions: initRobotPosition(),
+    points: walls.filter(wall => Object.keys(wall).length > 2),
 
 }
 
 const reducer = (state, action) => {
 
 }
+
+
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log('state.robotPositions', state.robotPositions);
 
   return (
     <div style={{display: 'flex', justifyContent: 'center',}}>
-      <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions}/>
+      <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points}/>
     </div>
   );
 }
