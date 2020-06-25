@@ -23,7 +23,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       }
     }
   }, []);
-  
+
   //로봇 배치
   useEffect(() => {
     robotPositions.forEach((element, index) => {
@@ -46,20 +46,30 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
 
 
   const styles = {
-    borderLeft: leftWall ? 'solid 5px red' : 'solid 1px black',
-    borderRight: rightWall ? 'solid 5px red' : 'solid 1px black',
-    borderTop: topWall ? 'solid 5px red' : 'solid 1px black',
-    borderBottom: bottomWall ? 'solid 5px red' : 'solid 1px black',
-    backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : isPoint ? 'violet' : null,
+    tdStyle: {
+      borderLeft: leftWall ? 'solid 5px red' : 'solid 1px black',
+      borderRight: rightWall ? 'solid 5px red' : 'solid 1px black',
+      borderTop: topWall ? 'solid 5px red' : 'solid 1px black',
+      borderBottom: bottomWall ? 'solid 5px red' : 'solid 1px black',
+      backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : isPoint ? 'violet' : null,
+    },
+    robotWrapper: {
+      // display: 'flex',
+      // justifyContent: 'center',
+      // width:'15px',
+      // height: '15px',
+    }
   }
   // if(robotKey !== 0) {
   //   console.log(robotKey, colIndex, rowIndex);
   // }
   return (
     <>
-      <td style={styles}>
-        {colIndex} / {rowIndex}
-        {isRobotHere && <Robot/>}
+      <td style={styles.tdStyle}>
+        {/* {colIndex} / {rowIndex} */}
+        <div style={styles.robotWrapper}>
+          {isRobotHere && <Robot />}
+        </div>
       </td>
     </>
   );
