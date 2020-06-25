@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { walls } from './setting';
+import Robot from './Robot';
 
 const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points }) => {
   const [leftWall, setLeftWall] = useState(false);
@@ -32,8 +33,12 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       }
     });
 
-    points.forEach(point => {
-      console.log(point.index[0], point.index[1]);
+    // 목표 지점들
+    const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
+    pointFilter.forEach(point => {
+      if (point.index[0] === colIndex && point.index[1] === rowIndex) {
+        setIsPoint(true);
+      }
     });
   }, []);
 
@@ -45,7 +50,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
     borderRight: rightWall ? 'solid 5px red' : 'solid 1px black',
     borderTop: topWall ? 'solid 5px red' : 'solid 1px black',
     borderBottom: bottomWall ? 'solid 5px red' : 'solid 1px black',
-    backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : null,
+    backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : isPoint ? 'violet' : null,
   }
   // if(robotKey !== 0) {
   //   console.log(robotKey, colIndex, rowIndex);
@@ -54,6 +59,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
     <>
       <td style={styles}>
         {colIndex} / {rowIndex}
+        {isRobotHere && <Robot/>}
       </td>
     </>
   );
