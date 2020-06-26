@@ -51,24 +51,19 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       borderRight: rightWall ? 'solid 5px red' : 'solid 1px black',
       borderTop: topWall ? 'solid 5px red' : 'solid 1px black',
       borderBottom: bottomWall ? 'solid 5px red' : 'solid 1px black',
-      backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : isPoint ? 'violet' : null,
+      backgroundColor: isPoint ? 'violet' : null,
     },
     robotWrapper: {
-      // display: 'flex',
-      // justifyContent: 'center',
-      // width:'15px',
-      // height: '15px',
+      display: 'flex',
+      justifyContent: 'center',
     }
   }
-  // if(robotKey !== 0) {
-  //   console.log(robotKey, colIndex, rowIndex);
-  // }
   return (
     <>
       <td style={styles.tdStyle}>
         {/* {colIndex} / {rowIndex} */}
         <div style={styles.robotWrapper}>
-          {isRobotHere && <Robot />}
+          {isRobotHere && <Robot robotKey={robotKey}/>}
         </div>
       </td>
     </>

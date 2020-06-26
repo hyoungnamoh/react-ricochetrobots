@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
-const styles = {
-  robotContainer: {
-    // width: '80%',
-    // height: '20px',
-    // flex: 1,
-    // width: '30px',
-    backgroundColor: 'black',
-    borderRadius: 5,
-    display: 'flex',
-    flexDirection: 'row',
-    justifycontent: 'center'
-  },
-  robotStyle: {
-    display: 'flex',
-    flex: 1,
-    backgroundColor: 'black',
 
+const Robot = ({robotKey}) => {
+  const styles = {
+    robotStyle: {
+      width: '30px',
+      height: '30px',
+      display: 'flex',
+      backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : null,
+      borderRadius: 15,
+    },
   }
-
-}
-const Robot = () => {
   return (
-    <div style={styles.robotContainer}>
-      <div style={styles.robotStyle}></div>
+    <div style={styles.robotStyle}>
     </div>
   )
 }
