@@ -75,6 +75,7 @@ export const walls =
         },
         {
             index: [3, 1],
+            top: true,
             right: true,
         },
         {
@@ -185,6 +186,7 @@ export const walls =
         },
         {
             index: [9, 1],
+            top: true,
             right: true,
         },
         {

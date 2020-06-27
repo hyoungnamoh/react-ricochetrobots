@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { ONCLICK_ROBOT_REQUEST } from './App';
 
 
-const Robot = ({robotKey}) => {
+const Robot = ({ robotKey, dispatch, moveRobot }) => {
   const styles = {
     robotStyle: {
       width: '30px',
@@ -11,8 +12,25 @@ const Robot = ({robotKey}) => {
       borderRadius: 15,
     },
   }
+
+  const onKeyDownApp = (e) => {
+    if (e.key === 'ArrowUp') {
+      moveRobot();
+      // dispatch({
+      //   type: 'ONKEYPRESS_ARROWUP_REQUEST',
+      // });
+    }
+  }
+  
+  const onClickRobot = useCallback(() => {
+    dispatch({
+      type: ONCLICK_ROBOT_REQUEST,
+      robotKey: robotKey,
+    });
+  }, []);
+
   return (
-    <div style={styles.robotStyle}>
+    <div style={styles.robotStyle} onClick={onClickRobot} onKeyDown={onKeyDownApp} tabIndex={0}>
     </div>
   )
 }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { walls } from './setting';
 import Robot from './Robot';
+import { MOVE_ROBOT_REQUEST } from './App';
 
-const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points }) => {
+const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot }) => {
   const [leftWall, setLeftWall] = useState(false);
   const [rightWall, setRightWall] = useState(false);
   const [topWall, setTopWall] = useState(false);
@@ -10,15 +11,28 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isRobotHere, setIsRobotHere] = useState(false);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
-
+  const [robotIndex, setRobotIndex] = useState([]);
   //벽 배치
   useEffect(() => {
+    if (colIndex === 0) {
+      setTopWall(true);
+    }
+    if (colIndex === 15) {
+      setBottomWall(true);
+    }
+    if (rowIndex === 0) {
+      setLeftWall(true);
+    }
+    if (rowIndex === 15) {
+      setRightWall(true);
+    }
+
     for (let i = 0; i < walls.length; i++) {
       if (walls[i].index[0] === colIndex && walls[i].index[1] === rowIndex) {
-        setLeftWall(walls[i].left);
-        setRightWall(walls[i].right);
-        setTopWall(walls[i].top);
-        setBottomWall(walls[i].bottom);
+        walls[i].left && setLeftWall(walls[i].left);
+        walls[i].right && setRightWall(walls[i].right);
+        walls[i].top && setTopWall(walls[i].top);
+        walls[i].bottom && setBottomWall(walls[i].bottom);
         return;
       }
     }
@@ -30,6 +44,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       if (element[0] === colIndex && element[1] === rowIndex) {
         setIsRobotHere(true);
         setRobotKey(index + 1);
+        setRobotIndex([colIndex, rowIndex]);
       }
     });
 
@@ -41,9 +56,17 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       }
     });
   }, []);
-
-
-
+  
+  const moveRobot = () => {
+    console.log(topWall, currentRobot);
+    if (!topWall && currentRobot) {
+      dispatch({
+        type: MOVE_ROBOT_REQUEST,
+        robotKey: robotKey - 1,
+        // movedIndex: robotPositions[robotKey][],
+      });
+    }
+  }
 
   const styles = {
     tdStyle: {
@@ -61,9 +84,9 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   return (
     <>
       <td style={styles.tdStyle}>
-        {/* {colIndex} / {rowIndex} */}
+        {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && <Robot robotKey={robotKey}/>}
+          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} />}
         </div>
       </td>
     </>
