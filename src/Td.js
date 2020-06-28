@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { walls } from './setting';
 import Robot from './Robot';
-import { MOVE_ROBOT_REQUEST } from './App';
+import { MOVE_ROBOT_REQUEST, PUSH_ROBOTINDEX_REQUEST, REPLACE_ROBOTINDEX_REQUEST } from './App';
 
-const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot }) => {
+const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
   const [leftWall, setLeftWall] = useState(false);
   const [rightWall, setRightWall] = useState(false);
   const [topWall, setTopWall] = useState(false);
@@ -11,7 +11,8 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isRobotHere, setIsRobotHere] = useState(false);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
-  const [robotIndex, setRobotIndex] = useState([]);
+  const [findRobotColIndex, setFindRobotColIndex] = useState(-1);
+  const [findRobotRowIndex, setFindRobotRowIndex] = useState(-1);
   //벽 배치
   useEffect(() => {
     if (colIndex === 0) {
@@ -40,13 +41,22 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
 
   //로봇 배치
   useEffect(() => {
-    robotPositions.forEach((element, index) => {
-      if (element[0] === colIndex && element[1] === rowIndex) {
+    robotPositions.map((robotPosition, index) => {
+      console.log('로봇 배치');
+      // console.log(0);
+      if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
+        // console.log(robotPosition[0], robotPosition[1]);
+        setFindRobotColIndex(colIndex);
+        setFindRobotRowIndex(rowIndex);
         setIsRobotHere(true);
         setRobotKey(index + 1);
-        setRobotIndex([colIndex, rowIndex]);
+        dispatch({
+          type: PUSH_ROBOTINDEX_REQUEST,
+          index: [colIndex, rowIndex],
+        });
       }
     });
+    // console.log('robotIndexs', robotIndexs);
 
     // 목표 지점들
     const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
@@ -55,15 +65,29 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
         setIsPoint(true);
       }
     });
+    // console.log('update');
   }, []);
-  
-  const moveRobot = () => {
-    console.log(topWall, currentRobot);
+
+  useEffect(() => {
+    console.log('update');
+    robotPositions.map((robotPosition, index) => {
+      if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
+        dispatch({
+          type: REPLACE_ROBOTINDEX_REQUEST,
+          key: robotKey,
+          index: [colIndex, rowIndex],
+        });
+      }
+    });
+  }, [robotPositions]);
+
+  const moveRobot = (i) => {
+    // console.log('robotPositions[robotKey]', robotPositions[robotKey][0]);
     if (!topWall && currentRobot) {
       dispatch({
         type: MOVE_ROBOT_REQUEST,
         robotKey: robotKey - 1,
-        // movedIndex: robotPositions[robotKey][],
+        movedIndex: [robotPositions[robotKey - 1][0] - 1, robotPositions[robotKey - 1][1]],
       });
     }
   }
