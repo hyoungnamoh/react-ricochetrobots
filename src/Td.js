@@ -13,8 +13,16 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isPoint, setIsPoint] = useState(false);
   const [findRobotColIndex, setFindRobotColIndex] = useState(-1);
   const [findRobotRowIndex, setFindRobotRowIndex] = useState(-1);
-  //벽 배치
+  const [isRobot, setIsRobot] = useState(tableData[colIndex][rowIndex].isRobot);
+  // 벽 배치
   useEffect(() => {
+    // console.log(isRobot);
+    if(isRobot) {
+      // setRobotKey(tableData[colIndex][rowIndex].robotKey);
+      console.log('야', tableData[colIndex][rowIndex].robotKey);
+      setRobotKey(tableData[colIndex][rowIndex].robotKey);
+    }
+    // 테두리
     if (colIndex === 0) {
       setTopWall(true);
     }
@@ -34,28 +42,41 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
         walls[i].right && setRightWall(walls[i].right);
         walls[i].top && setTopWall(walls[i].top);
         walls[i].bottom && setBottomWall(walls[i].bottom);
-        return;
       }
     }
   }, []);
 
   //로봇 배치
   useEffect(() => {
-    robotPositions.map((robotPosition, index) => {
-      console.log('로봇 배치');
-      // console.log(0);
-      if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
-        // console.log(robotPosition[0], robotPosition[1]);
+    robotPositions.forEach((position, index) => {
+      // console.log('asd', tableData);
+      if (position[0] === colIndex && position[1] === rowIndex) {
         setFindRobotColIndex(colIndex);
         setFindRobotRowIndex(rowIndex);
         setIsRobotHere(true);
-        setRobotKey(index + 1);
-        dispatch({
-          type: PUSH_ROBOTINDEX_REQUEST,
-          index: [colIndex, rowIndex],
-        });
+        // setRobotKey(index + 1);
+        return;
       }
     });
+    // robotPositions.map((position) => {
+    //   console.log('position');
+    //   if(position === [colIndex, rowIndex]) {
+    //     console.log('asdsada');
+    //   };
+    // })
+    // robotPositions.map((robotPosition, index) => {
+    //   if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
+    //     // console.log(robotPosition[0], robotPosition[1]);
+    //     setFindRobotColIndex(colIndex);
+    //     setFindRobotRowIndex(rowIndex);
+    //     setIsRobotHere(true);
+    //     setRobotKey(index + 1);
+    //     dispatch({
+    //       type: PUSH_ROBOTINDEX_REQUEST,
+    //       index: [colIndex, rowIndex],
+    //     });
+    //   }
+    // });
     // console.log('robotIndexs', robotIndexs);
 
     // 목표 지점들
@@ -65,11 +86,9 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
         setIsPoint(true);
       }
     });
-    // console.log('update');
   }, []);
 
   useEffect(() => {
-    console.log('update');
     robotPositions.map((robotPosition, index) => {
       if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
         dispatch({

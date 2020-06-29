@@ -1,10 +1,11 @@
 import React, { useReducer, useEffect } from 'react';
 import Table from './Table';
-import { initRobotPosition, walls } from './setting';
+import { initRobotPosition, walls, initTableData } from './setting';
 
 
 const initialState = {
-  tableData: Array(16).fill('').map(() => Array(16).fill('')),
+  // tableData: Array(16).fill({}).map(() => Array(16).fill('')),
+  tableData: initTableData(16, 16, initRobotPosition()),
   wallInfo: {
     left: false,
     right: false,
@@ -36,13 +37,8 @@ const reducer = (state, action) => {
         ...state,
       }
     case MOVE_ROBOT_REQUEST:
-      // state.currentRobot = action.robotKey;
-      // console.log('state.robotPositions', state.robotPositions);
-      // console.log('action.movedIndex', action.movedIndex);
-      // state.robotPositions[state.currentRobot - 1] = action.movedIndex;
       const robotPositions = [...state.robotPositions];
       robotPositions[state.currentRobot - 1] = action.movedIndex;
-      // console.log('robotPositions', robotPositions);
       return {
         ...state,
         robotPositions,
@@ -50,18 +46,15 @@ const reducer = (state, action) => {
     case PUSH_ROBOTINDEX_REQUEST:
       console.log('PUSH_ROBOTINDEX_REQUEST');
       const robotIndexs = [...state.robotIndexs];
-      robotIndexs.push(action.index);
-      // console.log('action.index', action.index);
-      // console.log('robotIndexs', robotIndexs);
       return {
         ...state,
         robotIndexs,
       }
     case REPLACE_ROBOTINDEX_REQUEST:
-      console.log(action.key, action.index);
+      // console.log('action.key, action.index', action.key, action.index);
       const spliceIndexs = [...state.robotIndexs];
-      spliceIndexs.splice(action.key - 1, 0, action.index);
-      console.log('spliceIndexs', spliceIndexs);
+      spliceIndexs.splice(action.key - 1, 1, action.index);
+      // console.log('spliceIndexs', spliceIndexs);
       return {
         ...state,
         robotIndexs: spliceIndexs,
@@ -75,10 +68,8 @@ const reducer = (state, action) => {
 
 
 const App = () => {
+  // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // console.log('state.robotPositions', state.robotPositions);
-
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
       <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />

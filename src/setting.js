@@ -20,6 +20,28 @@ export const initRobotPosition = (options) => {
     }
     return positionsArray;
 }
+
+export const initTableData = (col, row, robotPostions) => {
+    let table =[];
+    let robotKey = 1;
+    for(let i = 0; i < col; i ++) {
+        table.push([]);
+        for(let j = 0; j < row; j ++) {
+            // console.log(robotPostions.filter(position => position[0] === i && position[1] === j));
+            if(robotPostions.filter(position => position[0] === i && position[1] === j).length !== 0) {
+                console.log(i, j);
+                table[i].push({isRobot: true, robotKey: robotKey});
+                robotKey ++;
+            } else {
+                table[i].push({});
+            }
+            
+        }
+    }
+    console.log(table);
+    // console.log(table);
+    return table;
+}
 export const walls =
     [
         {
@@ -297,7 +319,7 @@ export const walls =
             left: true,
         },
         {
-            index: [15, 5],
+            index: [15, 4],
             right: true,
         },
         {
@@ -305,7 +327,7 @@ export const walls =
             left: true,
         },
         {
-            index: [15, 11],
+            index: [15, 10],
             right: true,
         },
         {
