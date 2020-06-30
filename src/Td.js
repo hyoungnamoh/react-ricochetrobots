@@ -4,24 +4,17 @@ import Robot from './Robot';
 import { MOVE_ROBOT_REQUEST, PUSH_ROBOTINDEX_REQUEST, REPLACE_ROBOTINDEX_REQUEST } from './App';
 
 const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
-  const [leftWall, setLeftWall] = useState(false);
-  const [rightWall, setRightWall] = useState(false);
-  const [topWall, setTopWall] = useState(false);
-  const [bottomWall, setBottomWall] = useState(false);
-  const [isRobotHere, setIsRobotHere] = useState(false);
+  const [leftWall, setLeftWall] = useState(tableData[colIndex][rowIndex].left);
+  const [rightWall, setRightWall] = useState(tableData[colIndex][rowIndex].right);
+  const [topWall, setTopWall] = useState(tableData[colIndex][rowIndex].top);
+  const [bottomWall, setBottomWall] = useState(tableData[colIndex][rowIndex].bottom);
+  const [isRobotHere, setIsRobotHere] = useState(tableData[colIndex][rowIndex].isRobot);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
   const [findRobotColIndex, setFindRobotColIndex] = useState(-1);
   const [findRobotRowIndex, setFindRobotRowIndex] = useState(-1);
-  const [isRobot, setIsRobot] = useState(tableData[colIndex][rowIndex].isRobot);
-  // 벽 배치
+
   useEffect(() => {
-    // console.log(isRobot);
-    if(isRobot) {
-      // setRobotKey(tableData[colIndex][rowIndex].robotKey);
-      console.log('야', tableData[colIndex][rowIndex].robotKey);
-      setRobotKey(tableData[colIndex][rowIndex].robotKey);
-    }
     // 테두리
     if (colIndex === 0) {
       setTopWall(true);
@@ -36,28 +29,44 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       setRightWall(true);
     }
 
-    for (let i = 0; i < walls.length; i++) {
-      if (walls[i].index[0] === colIndex && walls[i].index[1] === rowIndex) {
-        walls[i].left && setLeftWall(walls[i].left);
-        walls[i].right && setRightWall(walls[i].right);
-        walls[i].top && setTopWall(walls[i].top);
-        walls[i].bottom && setBottomWall(walls[i].bottom);
-      }
+    // 벽 배치
+    // for (let i = 0; i < walls.length; i++) {
+    //   // console.log('하이');
+    //   if (walls[i].index[0] === colIndex && walls[i].index[1] === rowIndex) {
+    //     walls[i].left && setLeftWall(walls[i].left);
+    //     walls[i].right && setRightWall(walls[i].right);
+    //     walls[i].top && setTopWall(walls[i].top);
+    //     walls[i].bottom && setBottomWall(walls[i].bottom);
+    //   }
+    // }
+
+    // 로봇 들 키값 부여
+    if (isRobotHere) {
+      setRobotKey(tableData[colIndex][rowIndex].robotKey);
     }
+
+    // 목표 지점들
+    const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
+    pointFilter.forEach(point => {
+      if (point.index[0] === colIndex && point.index[1] === rowIndex) {
+        setIsPoint(true);
+      }
+    });
   }, []);
 
   //로봇 배치
   useEffect(() => {
-    robotPositions.forEach((position, index) => {
-      // console.log('asd', tableData);
-      if (position[0] === colIndex && position[1] === rowIndex) {
-        setFindRobotColIndex(colIndex);
-        setFindRobotRowIndex(rowIndex);
-        setIsRobotHere(true);
-        // setRobotKey(index + 1);
-        return;
-      }
-    });
+    //여기
+    // robotPositions.forEach((position, index) => {
+    //   // console.log('asd', tableData);
+    //   if (position[0] === colIndex && position[1] === rowIndex) {
+    //     setFindRobotColIndex(colIndex);
+    //     setFindRobotRowIndex(rowIndex);
+    //     // setIsRobotHere(true);
+    //     // setRobotKey(index + 1);
+    //     return;
+    //   }
+    // });
     // robotPositions.map((position) => {
     //   console.log('position');
     //   if(position === [colIndex, rowIndex]) {
@@ -79,13 +88,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
     // });
     // console.log('robotIndexs', robotIndexs);
 
-    // 목표 지점들
-    const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
-    pointFilter.forEach(point => {
-      if (point.index[0] === colIndex && point.index[1] === rowIndex) {
-        setIsPoint(true);
-      }
-    });
+
   }, []);
 
   useEffect(() => {

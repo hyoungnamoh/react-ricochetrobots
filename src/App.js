@@ -5,7 +5,7 @@ import { initRobotPosition, walls, initTableData } from './setting';
 
 const initialState = {
   // tableData: Array(16).fill({}).map(() => Array(16).fill('')),
-  tableData: initTableData(16, 16, initRobotPosition()),
+  tableData: initTableData(16, 16, initRobotPosition(), walls),
   wallInfo: {
     left: false,
     right: false,
