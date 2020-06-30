@@ -28,8 +28,15 @@ export const MOVE_ROBOT_REQUEST = 'MOVE_ROBOT_REQUEST'; // 로봇 포지션 바�
 const reducer = (state, action) => {
   switch (action.type) {
     case ONKEYDOWN_ARROWUP_REQUEST:
+      console.log(action.colIndex, action.rowIndex);
+      const tableData = [...state.tableData];
+      tableData[action.colIndex][action.rowIndex].isRobot = false;
+      tableData[action.colIndex][action.rowIndex].robotKey = 0;
+      tableData[action.colIndex - 1][action.rowIndex].isRobot = true;
+      tableData[action.colIndex - 1][action.rowIndex].isRobot = tableData[action.colIndex][action.rowIndex].robotKey;
       return {
         ...state,
+        tableData,
       }
     case ONCLICK_ROBOT_REQUEST:
       state.currentRobot = action.robotKey;
@@ -68,8 +75,10 @@ const reducer = (state, action) => {
 
 
 const App = () => {
+  
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(state.tableData);
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
       <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />

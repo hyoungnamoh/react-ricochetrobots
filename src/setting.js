@@ -38,15 +38,27 @@ export const initTableData = (col, row, robotPostions, walls) => {
       }
       walls.forEach(wall => {
         if (wall.index[0] === i && wall.index[1] === j) {
+          if (Object.keys(wall).length > 2) {
+            table[i][j].isPoint = true;
+            // console.log(table[i][j])
+          }
           // console.log(i, j, wall);
-          table[i][j].top = wall.top;
-          table[i][j].bottom = wall.bottom;
-          table[i][j].left = wall.left;
-          table[i][j].right = wall.right;
+          if (wall.top) {
+            table[i][j].top = wall.top;
+          }
+          if (wall.bottom) {
+            table[i][j].bottom = wall.bottom;
+          }
+          if (wall.left) {
+            table[i][j].left = wall.left;
+          }
+          if (wall.right) {
+            table[i][j].right = wall.right;
+          }
           walls.splice(0, 1);
           // console.log(walls);
         }
-        console.log('하이');
+        // console.log('하이');
       });
     }
     // console.log(table);
@@ -62,7 +74,7 @@ export const initTableData = (col, row, robotPostions, walls) => {
   // }
 
   // console.log(table);
-  // console.log(table);
+  console.log(table);
   return table;
 }
 export const walls =

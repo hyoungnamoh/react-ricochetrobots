@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { ONCLICK_ROBOT_REQUEST } from './App';
 
 
-const Robot = ({ robotKey, dispatch, moveRobot }) => {
+const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex }) => {
   const styles = {
     robotStyle: {
       width: '30px',
@@ -15,17 +15,21 @@ const Robot = ({ robotKey, dispatch, moveRobot }) => {
 
   const onKeyDownApp = (e) => {
     if (e.key === 'ArrowUp') {
-      moveRobot();
-      // dispatch({
-      //   type: 'ONKEYPRESS_ARROWUP_REQUEST',
-      // });
+      console.log('hi');
+      dispatch({
+        type: 'ONKEYDOWN_ARROWUP_REQUEST',
+        // direction: 'top',
+        colIndex,
+        rowIndex,
+      });
     }
   }
-  
+
   const onClickRobot = useCallback(() => {
     dispatch({
       type: ONCLICK_ROBOT_REQUEST,
       robotKey: robotKey,
+
     });
   }, []);
 

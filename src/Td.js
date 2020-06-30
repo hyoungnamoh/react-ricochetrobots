@@ -11,8 +11,6 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isRobotHere, setIsRobotHere] = useState(tableData[colIndex][rowIndex].isRobot);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
-  const [findRobotColIndex, setFindRobotColIndex] = useState(-1);
-  const [findRobotRowIndex, setFindRobotRowIndex] = useState(-1);
 
   useEffect(() => {
     // 테두리
@@ -29,6 +27,16 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       setRightWall(true);
     }
 
+    // 로봇 들 키값 부여
+    if (isRobotHere) {
+      setRobotKey(tableData[colIndex][rowIndex].robotKey);
+    }
+
+    // 목표 지점들
+    if (tableData[colIndex][rowIndex].isPoint) {
+      setIsPoint(true);
+    }
+
     // 벽 배치
     // for (let i = 0; i < walls.length; i++) {
     //   // console.log('하이');
@@ -40,18 +48,15 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
     //   }
     // }
 
-    // 로봇 들 키값 부여
-    if (isRobotHere) {
-      setRobotKey(tableData[colIndex][rowIndex].robotKey);
-    }
+
 
     // 목표 지점들
-    const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
-    pointFilter.forEach(point => {
-      if (point.index[0] === colIndex && point.index[1] === rowIndex) {
-        setIsPoint(true);
-      }
-    });
+    // const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
+    // pointFilter.forEach(point => {
+    //   if (point.index[0] === colIndex && point.index[1] === rowIndex) {
+    //     setIsPoint(true);
+    //   }
+    // });
   }, []);
 
   //로봇 배치
@@ -91,20 +96,19 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
 
   }, []);
 
-  useEffect(() => {
-    robotPositions.map((robotPosition, index) => {
-      if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
-        dispatch({
-          type: REPLACE_ROBOTINDEX_REQUEST,
-          key: robotKey,
-          index: [colIndex, rowIndex],
-        });
-      }
-    });
-  }, [robotPositions]);
+  // useEffect(() => {
+  //   robotPositions.map((robotPosition, index) => {
+  //     if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
+  //       dispatch({
+  //         type: REPLACE_ROBOTINDEX_REQUEST,
+  //         key: robotKey,
+  //         index: [colIndex, rowIndex],
+  //       });
+  //     }
+  //   });
+  // }, [robotPositions]);
 
   const moveRobot = (i) => {
-    // console.log('robotPositions[robotKey]', robotPositions[robotKey][0]);
     if (!topWall && currentRobot) {
       dispatch({
         type: MOVE_ROBOT_REQUEST,
@@ -132,7 +136,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       <td style={styles.tdStyle}>
         {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} />}
+          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
         </div>
       </td>
     </>
