@@ -3,6 +3,11 @@ import { ONCLICK_ROBOT_REQUEST } from './App';
 
 
 const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex }) => {
+  useEffect(() => {
+    console.log(robotKey, 'robot');
+  })
+
+
   const styles = {
     robotStyle: {
       width: '30px',
@@ -15,7 +20,6 @@ const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex }) => {
 
   const onKeyDownApp = (e) => {
     if (e.key === 'ArrowUp') {
-      console.log('hi');
       dispatch({
         type: 'ONKEYDOWN_ARROWUP_REQUEST',
         // direction: 'top',

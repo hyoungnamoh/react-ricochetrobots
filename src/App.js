@@ -28,12 +28,15 @@ export const MOVE_ROBOT_REQUEST = 'MOVE_ROBOT_REQUEST'; // 로봇 포지션 바�
 const reducer = (state, action) => {
   switch (action.type) {
     case ONKEYDOWN_ARROWUP_REQUEST:
-      console.log(action.colIndex, action.rowIndex);
+      // console.log(action.colIndex, action.rowIndex);
       const tableData = [...state.tableData];
-      tableData[action.colIndex][action.rowIndex].isRobot = false;
-      tableData[action.colIndex][action.rowIndex].robotKey = 0;
-      tableData[action.colIndex - 1][action.rowIndex].isRobot = true;
-      tableData[action.colIndex - 1][action.rowIndex].isRobot = tableData[action.colIndex][action.rowIndex].robotKey;
+      tableData[action.colIndex - 1][action.rowIndex].isRobotHere = tableData[action.colIndex][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+      tableData[action.colIndex - 1][action.rowIndex].robotKey = tableData[action.colIndex][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+      tableData[action.colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+      tableData[action.colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      
+      
+      // console.log(tableData[action.colIndex - 1][action.rowIndex]);
       return {
         ...state,
         tableData,

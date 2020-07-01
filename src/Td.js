@@ -37,76 +37,16 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       setIsPoint(true);
     }
 
-    // 벽 배치
-    // for (let i = 0; i < walls.length; i++) {
-    //   // console.log('하이');
-    //   if (walls[i].index[0] === colIndex && walls[i].index[1] === rowIndex) {
-    //     walls[i].left && setLeftWall(walls[i].left);
-    //     walls[i].right && setRightWall(walls[i].right);
-    //     walls[i].top && setTopWall(walls[i].top);
-    //     walls[i].bottom && setBottomWall(walls[i].bottom);
-    //   }
-    // }
-
-
-
-    // 목표 지점들
-    // const pointFilter = points.filter(point => point.index[0] === colIndex && point.index[1] === rowIndex && !(point.right && point.left) && !(point.top && point.bottom));
-    // pointFilter.forEach(point => {
-    //   if (point.index[0] === colIndex && point.index[1] === rowIndex) {
-    //     setIsPoint(true);
-    //   }
-    // });
   }, []);
 
-  //로봇 배치
   useEffect(() => {
-    //여기
-    // robotPositions.forEach((position, index) => {
-    //   // console.log('asd', tableData);
-    //   if (position[0] === colIndex && position[1] === rowIndex) {
-    //     setFindRobotColIndex(colIndex);
-    //     setFindRobotRowIndex(rowIndex);
-    //     // setIsRobotHere(true);
-    //     // setRobotKey(index + 1);
-    //     return;
-    //   }
-    // });
-    // robotPositions.map((position) => {
-    //   console.log('position');
-    //   if(position === [colIndex, rowIndex]) {
-    //     console.log('asdsada');
-    //   };
-    // })
-    // robotPositions.map((robotPosition, index) => {
-    //   if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
-    //     // console.log(robotPosition[0], robotPosition[1]);
-    //     setFindRobotColIndex(colIndex);
-    //     setFindRobotRowIndex(rowIndex);
-    //     setIsRobotHere(true);
-    //     setRobotKey(index + 1);
-    //     dispatch({
-    //       type: PUSH_ROBOTINDEX_REQUEST,
-    //       index: [colIndex, rowIndex],
-    //     });
-    //   }
-    // });
-    // console.log('robotIndexs', robotIndexs);
-
-
-  }, []);
-
-  // useEffect(() => {
-  //   robotPositions.map((robotPosition, index) => {
-  //     if ((colIndex > findRobotColIndex || rowIndex > findRobotRowIndex) && robotPosition[0] === colIndex && robotPosition[1] === rowIndex) {
-  //       dispatch({
-  //         type: REPLACE_ROBOTINDEX_REQUEST,
-  //         key: robotKey,
-  //         index: [colIndex, rowIndex],
-  //       });
-  //     }
-  //   });
-  // }, [robotPositions]);
+    // console.log('useEffect', isRobotHere);
+    setIsRobotHere(tableData[colIndex][rowIndex].isRobot);
+    // 로봇 들 키값 부여
+    if (isRobotHere) {
+      setRobotKey(tableData[colIndex][rowIndex].robotKey);
+    }
+  }, [tableData]);
 
   const moveRobot = (i) => {
     if (!topWall && currentRobot) {
@@ -131,12 +71,13 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       justifyContent: 'center',
     }
   }
+  console.log(isRobotHere, 'isRobotHere');
   return (
     <>
       <td style={styles.tdStyle}>
         {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
+          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex} />}
         </div>
       </td>
     </>
