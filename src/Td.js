@@ -8,11 +8,12 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [rightWall, setRightWall] = useState(tableData[colIndex][rowIndex].right);
   const [topWall, setTopWall] = useState(tableData[colIndex][rowIndex].top);
   const [bottomWall, setBottomWall] = useState(tableData[colIndex][rowIndex].bottom);
-  const [isRobotHere, setIsRobotHere] = useState(tableData[colIndex][rowIndex].isRobot);
+  const [isRobotHere, setIsRobotHere] = useState(tableData[colIndex][rowIndex].isRobotHere);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
 
   useEffect(() => {
+    
     // 테두리
     if (colIndex === 0) {
       setTopWall(true);
@@ -27,11 +28,6 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       setRightWall(true);
     }
 
-    // 로봇 들 키값 부여
-    if (isRobotHere) {
-      setRobotKey(tableData[colIndex][rowIndex].robotKey);
-    }
-
     // 목표 지점들
     if (tableData[colIndex][rowIndex].isPoint) {
       setIsPoint(true);
@@ -40,12 +36,10 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   }, []);
 
   useEffect(() => {
-    // console.log('useEffect', isRobotHere);
-    setIsRobotHere(tableData[colIndex][rowIndex].isRobot);
+    // dispatch 해서 테이블 데이터 바꾸면 로봇 키와 로봇 위치 업데이트
+    setRobotKey(tableData[colIndex][rowIndex].robotKey);
+    setIsRobotHere(tableData[colIndex][rowIndex].isRobotHere);
     // 로봇 들 키값 부여
-    if (isRobotHere) {
-      setRobotKey(tableData[colIndex][rowIndex].robotKey);
-    }
   }, [tableData]);
 
   const moveRobot = (i) => {
@@ -71,13 +65,13 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       justifyContent: 'center',
     }
   }
-  console.log(isRobotHere, 'isRobotHere');
+  // console.log(isRobotHere, 'isRobotHere');
   return (
     <>
       <td style={styles.tdStyle}>
         {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && <Robot robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex} />}
+          {isRobotHere && (robotKey !== 0) && <Robot tableData={tableData} robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
         </div>
       </td>
     </>

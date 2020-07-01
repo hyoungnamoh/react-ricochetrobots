@@ -28,20 +28,20 @@ export const MOVE_ROBOT_REQUEST = 'MOVE_ROBOT_REQUEST'; // 로봇 포지션 바�
 const reducer = (state, action) => {
   switch (action.type) {
     case ONKEYDOWN_ARROWUP_REQUEST:
-      // console.log(action.colIndex, action.rowIndex);
       const tableData = [...state.tableData];
-      tableData[action.colIndex - 1][action.rowIndex].isRobotHere = tableData[action.colIndex][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
-      tableData[action.colIndex - 1][action.rowIndex].robotKey = tableData[action.colIndex][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
-      tableData[action.colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
-      tableData[action.colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
-      
-      
-      // console.log(tableData[action.colIndex - 1][action.rowIndex]);
+      console.log(tableData[action.colIndex][action.rowIndex]);
+      if(!tableData[action.colIndex][action.rowIndex].top) { //윗쪽 벽이 없어야 실행
+        tableData[action.colIndex - 1][action.rowIndex].isRobotHere = tableData[action.colIndex][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[action.colIndex - 1][action.rowIndex].robotKey = tableData[action.colIndex][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[action.colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[action.colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      }
       return {
         ...state,
         tableData,
       }
     case ONCLICK_ROBOT_REQUEST:
+      console.log(action.robotKey);
       state.currentRobot = action.robotKey;
       return {
         ...state,
@@ -54,7 +54,7 @@ const reducer = (state, action) => {
         robotPositions,
       }
     case PUSH_ROBOTINDEX_REQUEST:
-      console.log('PUSH_ROBOTINDEX_REQUEST');
+      // console.log('PUSH_ROBOTINDEX_REQUEST');
       const robotIndexs = [...state.robotIndexs];
       return {
         ...state,
@@ -81,7 +81,7 @@ const App = () => {
   
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state.tableData);
+  // console.log(state.tableData);
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
       <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />

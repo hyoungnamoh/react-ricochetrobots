@@ -22,16 +22,14 @@ export const initRobotPosition = (options) => {
 }
 
 export const initTableData = (col, row, robotPostions, walls) => {
-  console.log(walls.length);
+  // console.log(walls.length);
   let table = [];
   let robotKey = 1;
   for (let i = 0; i < col; i++) {
     table.push([]);
     for (let j = 0; j < row; j++) {
-      // console.log(robotPostions.filter(position => position[0] === i && position[1] === j));
       if (robotPostions.filter(position => position[0] === i && position[1] === j).length !== 0) {
-        // console.log(i, j);
-        table[i].push({ isRobot: true, robotKey: robotKey });
+        table[i].push({ isRobotHere: true, robotKey: robotKey });
         robotKey++;
       } else {
         table[i].push({});
@@ -40,9 +38,7 @@ export const initTableData = (col, row, robotPostions, walls) => {
         if (wall.index[0] === i && wall.index[1] === j) {
           if (Object.keys(wall).length > 2) {
             table[i][j].isPoint = true;
-            // console.log(table[i][j])
           }
-          // console.log(i, j, wall);
           if (wall.top) {
             table[i][j].top = wall.top;
           }
@@ -56,25 +52,10 @@ export const initTableData = (col, row, robotPostions, walls) => {
             table[i][j].right = wall.right;
           }
           walls.splice(0, 1);
-          // console.log(walls);
         }
-        // console.log('하이');
       });
     }
-    // console.log(table);
   }
-  // 벽 배치
-  // for (let i = 0; i < walls.length; i++) {
-  //     if (walls[i].index[0] === colIndex && walls[i].index[1] === rowIndex) {
-  //         walls[i].left && setLeftWall(walls[i].left);
-  //         walls[i].right && setRightWall(walls[i].right);
-  //         walls[i].top && setTopWall(walls[i].top);
-  //         walls[i].bottom && setBottomWall(walls[i].bottom);
-  //     }
-  // }
-
-  // console.log(table);
-  console.log(table);
   return table;
 }
 export const walls =
