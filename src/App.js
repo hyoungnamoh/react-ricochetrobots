@@ -20,32 +20,63 @@ const initialState = {
 }
 
 export const ONKEYDOWN_ARROWUP_REQUEST = 'ONKEYDOWN_ARROWUP_REQUEST';
+export const ONKEYDOWN_ARROWLEFT_REQUEST = 'ONKEYDOWN_ARROWLEFT_REQUEST';
+export const ONKEYDOWN_ARROWRIGHT_REQUEST = 'ONKEYDOWN_ARROWRIGHT_REQUEST';
+export const ONKEYDOWN_ARROWDOWN_REQUEST = 'ONKEYDOWN_ARROWDOWN_REQUEST';
 export const ONCLICK_ROBOT_REQUEST = 'ONCLICK_ROBOT_REQUEST';
 export const PUSH_ROBOTINDEX_REQUEST = 'PUSH_ROBOTINDEX_REQUEST';
 export const REPLACE_ROBOTINDEX_REQUEST = 'REPLACE_ROBOTINDEX_REQUEST';
 export const MOVE_ROBOT_REQUEST = 'MOVE_ROBOT_REQUEST'; // 로봇 포지션 바꿔줄 친구
 
 const reducer = (state, action) => {
+  const tableData = [...state.tableData];
+  let colIndex = action.colIndex;
+  let rowIndex = action.rowIndex;
   switch (action.type) {
     case ONKEYDOWN_ARROWUP_REQUEST:
-      const tableData = [...state.tableData];
-      let colIndex = action.colIndex;
-      while (!tableData[colIndex][action.rowIndex].top && colIndex > 0) {
-        console.log('while', colIndex, action.rowIndex);
-        colIndex--;
-        // tableData[colIndex][action.rowIndex].isRobotHere = tableData[action.colIndex + 1][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
-        // tableData[colIndex][action.rowIndex].robotKey = tableData[action.colIndex + 1][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
-        // tableData[colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
-        // tableData[colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
-
-        tableData[colIndex][action.rowIndex].isRobotHere = tableData[colIndex + 1][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
-        tableData[colIndex][action.rowIndex].robotKey = tableData[colIndex + 1][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
-        tableData[colIndex + 1][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
-        tableData[colIndex + 1][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      while (!tableData[colIndex][action.rowIndex].top && colIndex > 0 && !tableData[colIndex - 1][rowIndex].isRobotHere) {
+        colIndex--; // 인데스 한 칸 위로
+        tableData[colIndex][rowIndex].isRobotHere = tableData[colIndex + 1][rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[colIndex][rowIndex].robotKey = tableData[colIndex + 1][rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[colIndex + 1][rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[colIndex + 1][rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
       }
-      // if(!tableData[action.colIndex][action.rowIndex].top) { //윗쪽 벽이 없어야 실행
-        
-      // }
+      return {
+        ...state,
+        tableData,
+      }
+    case ONKEYDOWN_ARROWDOWN_REQUEST:
+      while (!tableData[colIndex][rowIndex].bottom && colIndex < 15 && !tableData[colIndex + 1][rowIndex].isRobotHere) {
+        colIndex++; // 인데스 한 칸 아래로
+        tableData[colIndex][rowIndex].isRobotHere = tableData[colIndex - 1][rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[colIndex][rowIndex].robotKey = tableData[colIndex - 1][rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[colIndex - 1][rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[colIndex - 1][rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      }
+      return {
+        ...state,
+        tableData,
+      }
+    case ONKEYDOWN_ARROWLEFT_REQUEST:
+      while (!tableData[colIndex][rowIndex].left && rowIndex > 0 && !tableData[colIndex][rowIndex - 1].isRobotHere) {
+        rowIndex--; // 인데스 한 칸 왼쪽으로
+        tableData[colIndex][rowIndex].isRobotHere = tableData[colIndex][rowIndex + 1].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[colIndex][rowIndex].robotKey = tableData[colIndex][rowIndex + 1].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[colIndex][rowIndex + 1].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[colIndex][rowIndex + 1].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      }
+      return {
+        ...state,
+        tableData,
+      }
+    case ONKEYDOWN_ARROWRIGHT_REQUEST:
+      while (!tableData[colIndex][rowIndex].right && rowIndex < 15 && !tableData[colIndex][rowIndex + 1].isRobotHere) {
+        rowIndex++; // 인데스 한 칸 오른쪽으로
+        tableData[colIndex][rowIndex].isRobotHere = tableData[colIndex][rowIndex - 1].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[colIndex][rowIndex].robotKey = tableData[colIndex][rowIndex - 1].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[colIndex][rowIndex - 1].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[colIndex][rowIndex - 1].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      }
       return {
         ...state,
         tableData,
@@ -84,7 +115,7 @@ const reducer = (state, action) => {
 
 
 const App = () => {
-  
+
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
   // console.log(state.tableData);

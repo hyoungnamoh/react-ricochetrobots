@@ -13,7 +13,6 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isPoint, setIsPoint] = useState(false);
 
   useEffect(() => {
-    
     // 테두리
     if (colIndex === 0) {
       setTopWall(true);
@@ -65,7 +64,6 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       justifyContent: 'center',
     }
   }
-  // console.log(isRobotHere, 'isRobotHere');
   return (
     <>
       <td style={styles.tdStyle}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ONCLICK_ROBOT_REQUEST } from './App';
+import { ONCLICK_ROBOT_REQUEST, ONKEYDOWN_ARROWUP_REQUEST, ONKEYDOWN_ARROWLEFT_REQUEST, ONKEYDOWN_ARROWDOWN_REQUEST, ONKEYDOWN_ARROWRIGHT_REQUEST } from './App';
 
 
 const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData }) => {
@@ -20,19 +20,24 @@ const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData })
     },
   }
   const onKeyDownApp = (e) => {
+    let type;
     if (e.key === 'ArrowUp' && !tableData[colIndex][rowIndex].top) {
-      dispatch({
-        type: 'ONKEYDOWN_ARROWUP_REQUEST',
-        colIndex,
-        rowIndex,
-      });
-      // if(!tableData[colIndex][rowIndex].top) {
-      //   return onKeyDownApp({key: 'ArrowUp'});
-      // } else {
-      //   return;
-      // }
+      type = ONKEYDOWN_ARROWUP_REQUEST;
     }
-    
+    if (e.key === 'ArrowLeft' && !tableData[colIndex][rowIndex].left) {
+      type = ONKEYDOWN_ARROWLEFT_REQUEST;
+    }
+    if (e.key === 'ArrowDown' && !tableData[colIndex][rowIndex].bottom) {
+      type = ONKEYDOWN_ARROWDOWN_REQUEST;
+    }
+    if (e.key === 'ArrowRight' && !tableData[colIndex][rowIndex].right) {
+      type = ONKEYDOWN_ARROWRIGHT_REQUEST;
+    }
+    dispatch({
+      type,
+      colIndex,
+      rowIndex,
+    });
   }
 
   const onClickRobot = useCallback(() => {
