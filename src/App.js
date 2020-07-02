@@ -29,19 +29,28 @@ const reducer = (state, action) => {
   switch (action.type) {
     case ONKEYDOWN_ARROWUP_REQUEST:
       const tableData = [...state.tableData];
-      console.log(tableData[action.colIndex][action.rowIndex]);
-      if(!tableData[action.colIndex][action.rowIndex].top) { //윗쪽 벽이 없어야 실행
-        tableData[action.colIndex - 1][action.rowIndex].isRobotHere = tableData[action.colIndex][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
-        tableData[action.colIndex - 1][action.rowIndex].robotKey = tableData[action.colIndex][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
-        tableData[action.colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
-        tableData[action.colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+      let colIndex = action.colIndex;
+      while (!tableData[colIndex][action.rowIndex].top && colIndex > 0) {
+        console.log('while', colIndex, action.rowIndex);
+        colIndex--;
+        // tableData[colIndex][action.rowIndex].isRobotHere = tableData[action.colIndex + 1][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+        // tableData[colIndex][action.rowIndex].robotKey = tableData[action.colIndex + 1][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+        // tableData[colIndex][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+        // tableData[colIndex][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
+
+        tableData[colIndex][action.rowIndex].isRobotHere = tableData[colIndex + 1][action.rowIndex].isRobotHere; // 옮겨진 곳에 로봇 생성
+        tableData[colIndex][action.rowIndex].robotKey = tableData[colIndex + 1][action.rowIndex].robotKey; // 기존에 있던 로봇 인덱스 복사
+        tableData[colIndex + 1][action.rowIndex].isRobotHere = false; // 기존에 있던 로봇 삭제
+        tableData[colIndex + 1][action.rowIndex].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
       }
+      // if(!tableData[action.colIndex][action.rowIndex].top) { //윗쪽 벽이 없어야 실행
+        
+      // }
       return {
         ...state,
         tableData,
       }
     case ONCLICK_ROBOT_REQUEST:
-      console.log(action.robotKey);
       state.currentRobot = action.robotKey;
       return {
         ...state,
@@ -54,17 +63,14 @@ const reducer = (state, action) => {
         robotPositions,
       }
     case PUSH_ROBOTINDEX_REQUEST:
-      // console.log('PUSH_ROBOTINDEX_REQUEST');
       const robotIndexs = [...state.robotIndexs];
       return {
         ...state,
         robotIndexs,
       }
     case REPLACE_ROBOTINDEX_REQUEST:
-      // console.log('action.key, action.index', action.key, action.index);
       const spliceIndexs = [...state.robotIndexs];
       spliceIndexs.splice(action.key - 1, 1, action.index);
-      // console.log('spliceIndexs', spliceIndexs);
       return {
         ...state,
         robotIndexs: spliceIndexs,

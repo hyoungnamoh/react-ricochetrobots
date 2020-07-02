@@ -20,16 +20,19 @@ const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData })
     },
   }
   const onKeyDownApp = (e) => {
-    if (e.key === 'ArrowUp') {
+    if (e.key === 'ArrowUp' && !tableData[colIndex][rowIndex].top) {
       dispatch({
         type: 'ONKEYDOWN_ARROWUP_REQUEST',
         colIndex,
         rowIndex,
       });
-      if(!tableData[colIndex][rowIndex].top) {
-        onKeyDownApp({key: 'ArrowUp'});
-      }
+      // if(!tableData[colIndex][rowIndex].top) {
+      //   return onKeyDownApp({key: 'ArrowUp'});
+      // } else {
+      //   return;
+      // }
     }
+    
   }
 
   const onClickRobot = useCallback(() => {
@@ -40,7 +43,7 @@ const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData })
   }, []);
 
   return (
-    <div style={styles.robotStyle} onClick={onClickRobot} onKeyDown={onKeyDownApp} tabIndex={0}/>
+    <div style={styles.robotStyle} onClick={onClickRobot} onKeyDown={onKeyDownApp} tabIndex={0} />
   )
 }
 
