@@ -22,9 +22,9 @@ export const initRobotPosition = (options) => {
 }
 
 export const initTableData = (col, row, robotPostions, walls) => {
-  // console.log(walls.length);
   let table = [];
   let robotKey = 1;
+  let points = []; // 포인트들 모아 둔 배열, 이 중에 랜덤으로 목표지점 설정
   for (let i = 0; i < col; i++) {
     table.push([]);
     for (let j = 0; j < row; j++) {
@@ -36,8 +36,9 @@ export const initTableData = (col, row, robotPostions, walls) => {
       }
       walls.forEach(wall => {
         if (wall.index[0] === i && wall.index[1] === j) {
-          if (Object.keys(wall).length > 2) {
+          if (Object.keys(wall).length > 2 && !(wall.top && wall.bottom) && !(wall.right && wall.left)) {
             table[i][j].isPoint = true;
+            points.push([i, j]);
           }
           if (wall.top) {
             table[i][j].top = wall.top;
@@ -56,6 +57,13 @@ export const initTableData = (col, row, robotPostions, walls) => {
       });
     }
   }
+  // 목표지점 랜덤으로 설정
+  let targetPoint = points.splice(Math.floor(Math.random() * points.length), 1)[0];
+  while(table[targetPoint[0]][targetPoint[1]].isRobotHere) { // 혹시 목표 지점이랑 로봇 위치랑 겹칠까봐..
+    targetPoint = points.splice(Math.floor(Math.random() * points.length), 1)[0];
+  }
+  table[targetPoint[0]][targetPoint[1]].isTargetPoint = true;
+
   return table;
 }
 export const walls =

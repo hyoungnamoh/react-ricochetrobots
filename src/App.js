@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import Table from './Table';
 import { initRobotPosition, walls, initTableData } from './setting';
 
@@ -17,6 +17,7 @@ const initialState = {
   currentRobot: 0,
   onKeyDown: '',
   robotIndexs: [],
+  endOfGame: false,
 }
 
 export const ONKEYDOWN_ARROWUP_REQUEST = 'ONKEYDOWN_ARROWUP_REQUEST';
@@ -27,6 +28,7 @@ export const ONCLICK_ROBOT_REQUEST = 'ONCLICK_ROBOT_REQUEST';
 export const PUSH_ROBOTINDEX_REQUEST = 'PUSH_ROBOTINDEX_REQUEST';
 export const REPLACE_ROBOTINDEX_REQUEST = 'REPLACE_ROBOTINDEX_REQUEST';
 export const MOVE_ROBOT_REQUEST = 'MOVE_ROBOT_REQUEST'; // 로봇 포지션 바꿔줄 친구
+export const ENDOFGAME_REQUEST = 'ENDOFGAME_REQUEST'; // 로봇 포지션 바꿔줄 친구
 
 const reducer = (state, action) => {
   const tableData = [...state.tableData];
@@ -81,6 +83,12 @@ const reducer = (state, action) => {
         ...state,
         tableData,
       }
+    case ENDOFGAME_REQUEST:
+      const endOfGame = action.data;
+      return {
+        ...state,
+        endOfGame,
+      }
     case ONCLICK_ROBOT_REQUEST:
       state.currentRobot = action.robotKey;
       return {
@@ -115,13 +123,14 @@ const reducer = (state, action) => {
 
 
 const App = () => {
-
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [endOfGame, setendOfGame] = useState(state.endOfGame);
   // console.log(state.tableData);
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
-      <Table tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />
+      {state.endOfGame && <div>게임 종료</div>}
+      <Table endOfGame={state.endOfGame} tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />
     </div>
   );
 }

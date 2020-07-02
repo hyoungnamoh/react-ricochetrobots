@@ -3,7 +3,7 @@ import { walls } from './setting';
 import Robot from './Robot';
 import { MOVE_ROBOT_REQUEST, PUSH_ROBOTINDEX_REQUEST, REPLACE_ROBOTINDEX_REQUEST } from './App';
 
-const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
+const Td = ({ endOfGame, tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
   const [leftWall, setLeftWall] = useState(tableData[colIndex][rowIndex].left);
   const [rightWall, setRightWall] = useState(tableData[colIndex][rowIndex].right);
   const [topWall, setTopWall] = useState(tableData[colIndex][rowIndex].top);
@@ -11,6 +11,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
   const [isRobotHere, setIsRobotHere] = useState(tableData[colIndex][rowIndex].isRobotHere);
   const [robotKey, setRobotKey] = useState(0);
   const [isPoint, setIsPoint] = useState(false);
+  const [isTargetPoint, setIsTargetPoint] = useState(tableData[colIndex][rowIndex].isTargetPoint);
 
   useEffect(() => {
     // 테두리
@@ -57,7 +58,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       borderRight: rightWall ? 'solid 5px red' : 'solid 1px black',
       borderTop: topWall ? 'solid 5px red' : 'solid 1px black',
       borderBottom: bottomWall ? 'solid 5px red' : 'solid 1px black',
-      backgroundColor: isPoint ? 'violet' : null,
+      backgroundColor: isTargetPoint ? 'black' : isPoint ? 'violet' :  null,
     },
     robotWrapper: {
       display: 'flex',
@@ -69,7 +70,7 @@ const Td = ({ tableData, rowData, rowIndex, colIndex, colData, robotPositions, p
       <td style={styles.tdStyle}>
         {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && (robotKey !== 0) && <Robot tableData={tableData} robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
+          {isRobotHere && (robotKey !== 0) && <Robot endOfGame={endOfGame} tableData={tableData} robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
         </div>
       </td>
     </>

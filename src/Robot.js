@@ -1,9 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ONCLICK_ROBOT_REQUEST, ONKEYDOWN_ARROWUP_REQUEST, ONKEYDOWN_ARROWLEFT_REQUEST, ONKEYDOWN_ARROWDOWN_REQUEST, ONKEYDOWN_ARROWRIGHT_REQUEST } from './App';
+import { ONCLICK_ROBOT_REQUEST, ONKEYDOWN_ARROWUP_REQUEST, ONKEYDOWN_ARROWLEFT_REQUEST, ONKEYDOWN_ARROWDOWN_REQUEST, ONKEYDOWN_ARROWRIGHT_REQUEST, ENDOFGAME_REQUEST } from './App';
 
 
-const Robot = ({ robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData }) => {
+const Robot = ({ endOfGame, robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData }) => {
   useEffect(() => {
+    
+    if (tableData[colIndex][rowIndex].isTargetPoint && !endOfGame) { 
+      console.log('goal');
+      dispatch({
+        type: ENDOFGAME_REQUEST,
+        data: true,
+      })
+    }
     // console.log('robot', robotKey);
   })
 
