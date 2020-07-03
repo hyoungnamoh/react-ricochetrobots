@@ -125,7 +125,7 @@ const reducer = (state, action) => {
 const App = () => {
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
-  pathComputing([], initRobotPosition());
+  pathComputing(state.tableData, initRobotPosition());
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
       {state.endOfGame && <div>게임 종료</div>}

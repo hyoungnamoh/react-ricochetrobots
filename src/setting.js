@@ -69,11 +69,41 @@ export const initTableData = (col, row, robotPostions, walls) => {
   return table;
 }
 
+const MoveLeft = (tableData, col, row) => {
+  let moveDepth = 1;
+  let stop = false;
+  let rowIndex = row - moveDepth;
+  if (!tableData[col][rowIndex].left && !stop && col > moveDepth && col > 0) {
+    MoveLeft(tableData, col, rowIndex);
+  } else {
+    stop = true;
+    console.log('stop', col, '/', rowIndex);
+  }
+}
+
 export const pathComputing = (tableData, robotPostions) => {
-  // console.log(robotPostions);
-  robotPostions.map((d) => {
-    console.log(d);
-  })
+  console.log('pathComputing');
+  // console.log(robotPostions);a
+  // console.log(tableData);
+  robotPostions.splice(4);
+  let isFinding = false;
+  // console.log(tableData[robotPostions[0][0]][robotPostions[0][1]]);
+  if(!tableData[robotPostions[0][0]][robotPostions[0][1]].left) {
+    MoveLeft(tableData, robotPostions[0][0], robotPostions[0][1]);
+    // if(tableData[robotPostions[0][0] - 1][robotPostions[0][1]].left) {
+    //   if(tableData[robotPostions[0][0] - 2][robotPostions[0][1]].left) {
+    //     if(tableData[robotPostions[0][0] - 3][robotPostions[0][1]].left) {
+      
+    //     }
+    //   }
+    // }
+  }
+  // for (let i = 0; i < robotPostions.length; i++) {
+  //   console.log('tableData[i]', tableData[robotPostions[i][0]]);
+  //   if(tableData[robotPostions[i][0]].includes({top:true})) {
+  //     console.log('hi');
+  //   }
+  // }
 
 }
 
