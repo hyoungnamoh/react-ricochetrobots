@@ -1,7 +1,8 @@
+const positionsArray = [];
+
 export const initRobotPosition = (options) => {
   const colIndex = Array(15).fill().map((v, i) => i + 1);
   const rowIndex = Array(15).fill().map((v, i) => i + 1);
-  const positionsArray = [];
   for (let i = 0; i < 4; i++) {
     let position = [];
     const col = colIndex.splice(Math.floor(Math.random() * colIndex.length), 1)[0];
@@ -22,6 +23,7 @@ export const initRobotPosition = (options) => {
 }
 
 export const initTableData = (col, row, robotPostions, walls) => {
+  console.log(robotPostions);
   let table = [];
   let robotKey = 1;
   let points = []; // 포인트들 모아 둔 배열, 이 중에 랜덤으로 목표지점 설정
@@ -59,13 +61,22 @@ export const initTableData = (col, row, robotPostions, walls) => {
   }
   // 목표지점 랜덤으로 설정
   let targetPoint = points.splice(Math.floor(Math.random() * points.length), 1)[0];
-  while(table[targetPoint[0]][targetPoint[1]].isRobotHere) { // 혹시 목표 지점이랑 로봇 위치랑 겹칠까봐..
+  // 혹시 목표 지점이랑 로봇 위치랑 겹칠까봐..
+  while (table[targetPoint[0]][targetPoint[1]].isRobotHere) {
     targetPoint = points.splice(Math.floor(Math.random() * points.length), 1)[0];
   }
   table[targetPoint[0]][targetPoint[1]].isTargetPoint = true;
-
   return table;
 }
+
+export const pathComputing = (tableData, robotPostions) => {
+  // console.log(robotPostions);
+  robotPostions.map((d) => {
+    console.log(d);
+  })
+
+}
+
 export const walls =
   [
     {

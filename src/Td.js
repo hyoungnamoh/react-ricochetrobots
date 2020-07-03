@@ -3,7 +3,7 @@ import { walls } from './setting';
 import Robot from './Robot';
 import { MOVE_ROBOT_REQUEST, PUSH_ROBOTINDEX_REQUEST, REPLACE_ROBOTINDEX_REQUEST } from './App';
 
-const Td = ({ endOfGame, tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
+const Td = ({ targetRobotKey, endOfGame, tableData, rowData, rowIndex, colIndex, colData, robotPositions, points, dispatch, currentRobot, robotIndexs }) => {
   const [leftWall, setLeftWall] = useState(tableData[colIndex][rowIndex].left);
   const [rightWall, setRightWall] = useState(tableData[colIndex][rowIndex].right);
   const [topWall, setTopWall] = useState(tableData[colIndex][rowIndex].top);
@@ -70,7 +70,7 @@ const Td = ({ endOfGame, tableData, rowData, rowIndex, colIndex, colData, robotP
       <td style={styles.tdStyle}>
         {colIndex} / {rowIndex}
         <div style={styles.robotWrapper}>
-          {isRobotHere && (robotKey !== 0) && <Robot endOfGame={endOfGame} tableData={tableData} robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex}/>}
+          {isRobotHere && (robotKey !== 0) && <Robot endOfGame={endOfGame} tableData={tableData} robotKey={robotKey} dispatch={dispatch} moveRobot={moveRobot} currentRobot={currentRobot} colIndex={colIndex} rowIndex={rowIndex} isTargetRobotKey={targetRobotKey === robotKey}/>}
         </div>
       </td>
     </>

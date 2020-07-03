@@ -2,17 +2,16 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { ONCLICK_ROBOT_REQUEST, ONKEYDOWN_ARROWUP_REQUEST, ONKEYDOWN_ARROWLEFT_REQUEST, ONKEYDOWN_ARROWDOWN_REQUEST, ONKEYDOWN_ARROWRIGHT_REQUEST, ENDOFGAME_REQUEST } from './App';
 
 
-const Robot = ({ endOfGame, robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData }) => {
+const Robot = ({ endOfGame, robotKey, dispatch, moveRobot, colIndex, rowIndex, tableData, isTargetRobotKey }) => {
   useEffect(() => {
-    
-    if (tableData[colIndex][rowIndex].isTargetPoint && !endOfGame) { 
+    console.log(isTargetRobotKey);
+    if (tableData[colIndex][rowIndex].isTargetPoint && !endOfGame && isTargetRobotKey) { 
       console.log('goal');
       dispatch({
         type: ENDOFGAME_REQUEST,
         data: true,
       })
     }
-    // console.log('robot', robotKey);
   })
 
 
@@ -23,8 +22,9 @@ const Robot = ({ endOfGame, robotKey, dispatch, moveRobot, colIndex, rowIndex, t
       display: 'flex',
       backgroundColor: robotKey === 1 ? 'red' : robotKey === 2 ? 'orange' : robotKey === 3 ? 'yellow' : robotKey === 4 ? 'green' : null,
       borderRadius: 15,
-      // position: 'static',
-      zIndex: 10
+      // borderColor: isTargetRobotKey && 'black',
+      // borderWidth: '2px',
+      border: isTargetRobotKey && 'solid 2px black',
     },
   }
   const onKeyDownApp = (e) => {

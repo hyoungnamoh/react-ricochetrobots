@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import Table from './Table';
-import { initRobotPosition, walls, initTableData } from './setting';
+import { initRobotPosition, walls, initTableData, getTargetRobotKey, pathComputing } from './setting';
 
 
 const initialState = {
@@ -18,6 +18,7 @@ const initialState = {
   onKeyDown: '',
   robotIndexs: [],
   endOfGame: false,
+  targetRobotKey: Math.floor(Math.random() * 4) + 1, // 1~4
 }
 
 export const ONKEYDOWN_ARROWUP_REQUEST = 'ONKEYDOWN_ARROWUP_REQUEST';
@@ -84,10 +85,9 @@ const reducer = (state, action) => {
         tableData,
       }
     case ENDOFGAME_REQUEST:
-      const endOfGame = action.data;
       return {
         ...state,
-        endOfGame,
+        endOfGame: action.data,
       }
     case ONCLICK_ROBOT_REQUEST:
       state.currentRobot = action.robotKey;
@@ -125,12 +125,11 @@ const reducer = (state, action) => {
 const App = () => {
   // initTableData(16, 16);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [endOfGame, setendOfGame] = useState(state.endOfGame);
-  // console.log(state.tableData);
+  pathComputing([], initRobotPosition());
   return (
     <div style={{ display: 'flex', justifyContent: 'center', }} >
       {state.endOfGame && <div>게임 종료</div>}
-      <Table endOfGame={state.endOfGame} tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />
+      <Table targetRobotKey={state.targetRobotKey} endOfGame={state.endOfGame} tableData={state.tableData} wallInfo={state.wallInfo} robotPositions={state.robotPositions} points={state.points} dispatch={dispatch} currentRobot={state.currentRobot} robotIndexs={state.robotIndexs} />
     </div>
   );
 }
