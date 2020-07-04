@@ -143,30 +143,101 @@ export const pathComputing = (table, robotPostions) => {
     startCol = robotPostions[i][0];
     startRow = robotPostions[i][1];
     const robotKey = tableData[startCol][startRow].robotKey;
-    if (!tableData[startCol][startRow].left) { // 왼쪽 벽이 없으면 왼쪽으로 쭉 이동
+    if (!tableData[startCol][startRow].left) { // 각 첫번째 로봇부터 왼쪽 벽이 없으면 왼쪽으로 쭉 이동
       movedIndex = moveLeft(tableData, startCol, startRow, robotKey);
       movedCol = movedIndex.col;
       movedRow = movedIndex.row;
-  //     if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-  //       movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-  //       // console.log(movedIndex);
-  //       movedCol = movedIndex.col;
-  //       movedRow = movedIndex.row;
-  //       if (!tableData[startCol][startRow].left) {
-  //         movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
-  //         movedCol = movedIndex.col;
-  //         movedRow = movedIndex.row;
-  //       } else {
-  //         movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-  //         movedCol = movedIndex.col;
-  //         movedRow = movedIndex.row;
-  //       }
-
-  //     } else if (!tableData[movedCol][movedRow].bottom) {
-  //       movedIndex = moveBottom(tableData, movedCol, movedRow, robotKey);
+      if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].left) {
+          movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
+      } else if (!tableData[movedCol][movedRow].bottom) {
+        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].left) {
+          movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
+      }
+    } else if (!tableData[startCol][startRow].right) {
+      movedIndex = moveRight(tableData, startCol, startRow, robotKey);
+      movedCol = movedIndex.col;
+      movedRow = movedIndex.row;
+      if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].right) {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
+      } else if (!tableData[movedCol][movedRow].bottom) {
+        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].right) {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
+      }
+    } else if (!tableData[startCol][startRow].top) {
+      movedIndex = moveTop(tableData, startCol, startRow, robotKey);
+      movedCol = movedIndex.col;
+      movedRow = movedIndex.row;
+      if (!tableData[movedCol][movedRow].right) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+        movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].top) {
+          movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveBottom(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
+      } else if (!tableData[movedCol][movedRow].left) {
+        movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
+        movedCol = movedIndex.col;
+        movedRow = movedIndex.row;
+        if (!tableData[startCol][startRow].top) {
+          movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        } else {
+          movedIndex = moveBottom(tableData, movedCol, movedRow, robotKey);
+          movedCol = movedIndex.col;
+          movedRow = movedIndex.row;
+        }
       }
     }
-  // }
+  }
 
 
 }
