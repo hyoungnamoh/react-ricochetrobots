@@ -15,18 +15,18 @@ const Td = ({ targetRobotKey, endOfGame, tableData, rowData, rowIndex, colIndex,
 
   useEffect(() => {
     // 테두리
-    if (colIndex === 0) {
-      setTopWall(true);
-    }
-    if (colIndex === 15) {
-      setBottomWall(true);
-    }
-    if (rowIndex === 0) {
-      setLeftWall(true);
-    }
-    if (rowIndex === 15) {
-      setRightWall(true);
-    }
+    // if (colIndex === 0) {
+    //   setTopWall(true);
+    // }
+    // if (colIndex === 15) {
+    //   setBottomWall(true);
+    // }
+    // if (rowIndex === 0) {
+    //   setLeftWall(true);
+    // }
+    // if (rowIndex === 15) {
+    //   setRightWall(true);
+    // }
 
     // 목표 지점들
     if (tableData[colIndex][rowIndex].isPoint) {

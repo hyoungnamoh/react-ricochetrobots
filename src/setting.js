@@ -1,4 +1,5 @@
 const positionsArray = [];
+const movedHistory = [];
 
 export const initRobotPosition = (options) => {
   const colIndex = Array(15).fill().map((v, i) => i + 1);
@@ -35,6 +36,18 @@ export const initTableData = (col, row, robotPostions, walls) => {
         robotKey++;
       } else {
         table[i].push({});
+      }
+      if (i === 0) {
+        table[i][j].top = true;
+      }
+      if (i === 15) {
+        table[i][j].bottom = true;
+      }
+      if (j === 0) {
+        table[i][j].left = true;
+      }
+      if (j === 15) {
+        table[i][j].right = true;
       }
       walls.forEach(wall => {
         if (wall.index[0] === i && wall.index[1] === j) {
@@ -83,6 +96,10 @@ const moveLeft = (tableData, col, row, robotKey) => {
     return moveLeft(tableData, col, rowIndex, robotKey);
   } else {
     stop = true;
+    if(movedHistory.length > 1) {
+      movedHistory.shift();
+    }
+    movedHistory.push([col, row]);
     console.log(col, '/', row, 'robotKey: ', robotKey);
     return { col, row, robotKey };
   }
@@ -96,6 +113,10 @@ const moveTop = (tableData, col, row, robotKey) => {
     return moveTop(tableData, colIndex, row, robotKey);
   } else {
     stop = true;
+    if(movedHistory.length > 1) {
+      movedHistory.shift();
+    }
+    movedHistory.push([col, row]);
     console.log(col, '/', row, 'robotKey: ', robotKey);
     return { col, row };
   }
@@ -105,11 +126,14 @@ const moveBottom = (tableData, col, row, robotKey) => {
   let moveDepth = 1;
   let stop = false;
   let colIndex = col + moveDepth;
-
   if (colIndex < 16 && !tableData[col][row].bottom && !stop) {
     return moveBottom(tableData, colIndex, row, robotKey);
   } else {
     stop = true;
+    if(movedHistory.length > 1) {
+      movedHistory.shift();
+    }
+    movedHistory.push([col, row]);
     console.log(col, '/', row, 'robotKey: ', robotKey);
     return { col, row };
   }
@@ -123,14 +147,82 @@ const moveRight = (tableData, col, row, robotKey) => {
     return moveRight(tableData, col, rowIndex, robotKey);
   } else {
     stop = true;
+    if(movedHistory.length > 1) {
+      movedHistory.shift();
+    }
+    movedHistory.push([col, row]);
     console.log(col, '/', row, 'robotKey: ', robotKey);
     return { col, row };
   }
 }
 
+const ahffk = (tableData, startCol, startRow, robotKey) => {
+  let movedIndex;
+  let movedCol;
+  let movedRow;
+  let currentIndex = [startCol, startRow];
+  let isLoop = false;
+  if(movedHistory[0] === currentIndex) {
+    console.log('반복되는중');
+    return;
+  }
+  
+  
+  movedIndex = moveLeft(tableData, startCol, startRow, robotKey);
+  movedCol = movedIndex.col;
+  movedRow = movedIndex.row;
+  if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+    return ahffk3(tableData, movedCol, movedRow, robotKey);
+  } else if (!tableData[movedCol][movedRow].bottom) {
+    return ahffk4(tableData, movedCol, movedRow, robotKey);
+  }
+}
+
+const ahffk2 = (tableData, startCol, startRow, robotKey) => {
+  let movedIndex;
+  let movedCol;
+  let movedRow;
+  movedIndex = moveRight(tableData, startCol, startRow, robotKey);
+  movedCol = movedIndex.col;
+  movedRow = movedIndex.row;
+  if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+    return ahffk3(tableData, movedCol, movedRow, robotKey);
+  } else if (!tableData[movedCol][movedRow].bottom) {
+    return ahffk4(tableData, movedCol, movedRow, robotKey);
+  }
+}
+
+const ahffk4 = (tableData, startCol, startRow, robotKey) => {
+  let movedIndex;
+  let movedCol;
+  let movedRow;
+  movedIndex = moveBottom(tableData, startCol, startRow, robotKey);
+  movedCol = movedIndex.col;
+  movedRow = movedIndex.row;
+  if (!tableData[movedCol][movedRow].left) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+    return ahffk(tableData, movedCol, movedRow, robotKey);
+  } else if (!tableData[movedCol][movedRow].right) {
+    return ahffk2(tableData, movedCol, movedRow, robotKey);
+  }
+}
+const ahffk3 = (tableData, startCol, startRow, robotKey) => {
+  let movedIndex;
+  let movedCol;
+  let movedRow;
+  movedIndex = moveTop(tableData, startCol, startRow, robotKey);
+  movedCol = movedIndex.col;
+  movedRow = movedIndex.row;
+  if (!tableData[movedCol][movedRow].left) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+    return ahffk(tableData, movedCol, movedRow, robotKey);
+  } else if (!tableData[movedCol][movedRow].right) {
+    return ahffk2(tableData, movedCol, movedRow, robotKey);
+  }
+}
+
 export const pathComputing = (table, robotPostions) => {
   const tableData = JSON.parse(JSON.stringify(table));
-  console.log('pathComputing', );
+
+  console.log('pathComputing',);
   robotPostions.splice(4);
   let isFinding = false;
   //시작점
@@ -144,101 +236,15 @@ export const pathComputing = (table, robotPostions) => {
     startRow = robotPostions[i][1];
     const robotKey = tableData[startCol][startRow].robotKey;
     if (!tableData[startCol][startRow].left) { // 각 첫번째 로봇부터 왼쪽 벽이 없으면 왼쪽으로 쭉 이동
-      movedIndex = moveLeft(tableData, startCol, startRow, robotKey);
-      movedCol = movedIndex.col;
-      movedRow = movedIndex.row;
-      if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].left) {
-          movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      } else if (!tableData[movedCol][movedRow].bottom) {
-        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].left) {
-          movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      }
+      ahffk(tableData, startCol, startRow, robotKey);
     } else if (!tableData[startCol][startRow].right) {
-      movedIndex = moveRight(tableData, startCol, startRow, robotKey);
-      movedCol = movedIndex.col;
-      movedRow = movedIndex.row;
-      if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].right) {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      } else if (!tableData[movedCol][movedRow].bottom) {
-        movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].right) {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      }
+      ahffk2(tableData, startCol, startRow, robotKey);
     } else if (!tableData[startCol][startRow].top) {
-      movedIndex = moveTop(tableData, startCol, startRow, robotKey);
-      movedCol = movedIndex.col;
-      movedRow = movedIndex.row;
-      if (!tableData[movedCol][movedRow].right) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-        movedIndex = moveRight(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].top) {
-          movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveBottom(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      } else if (!tableData[movedCol][movedRow].left) {
-        movedIndex = moveLeft(tableData, movedCol, movedRow, robotKey);
-        movedCol = movedIndex.col;
-        movedRow = movedIndex.row;
-        if (!tableData[startCol][startRow].top) {
-          movedIndex = moveTop(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        } else {
-          movedIndex = moveBottom(tableData, movedCol, movedRow, robotKey);
-          movedCol = movedIndex.col;
-          movedRow = movedIndex.row;
-        }
-      }
+      ahffk3(tableData, startCol, startRow, robotKey);
+    } else if (!tableData[startCol][startRow].bottom) {
+      ahffk4(tableData, startCol, startRow, robotKey);
     }
   }
-
 
 }
 
@@ -333,6 +339,10 @@ export const walls =
       index: [5, 2],
       bottom: true,
       right: true,
+    },
+    {
+      index: [5, 3],
+      left: true,
     },
     {
       index: [5, 7],
@@ -434,6 +444,10 @@ export const walls =
     },
     {
       index: [9, 15],
+      bottom: true,
+    },
+    {
+      index: [10, 0],
       bottom: true,
     },
     {
