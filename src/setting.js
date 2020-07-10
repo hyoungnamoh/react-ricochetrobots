@@ -159,41 +159,61 @@ const moveRight = (tableData, col, row, robotKey) => {
 }
 
 
-const ifLeft = (tableData, startCol, startRow, robotKey) => {
+const ifLeft = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
   let movedIndex;
   let movedCol;
   let movedRow;
   let currentIndex = [startCol, startRow];
+  console.log(indexHistory);
+  console.log('indexHistory', indexHistory);
+  //이부분
+  if(!indexHistory.includes(e => e === startCol+startRow)){
+    console.log('중복');
+    return;
+  }
+  indexHistory.push(startCol+startRow);
+
+
+  prevFunc = 'ifLeft';
   count++;
   console.log('left', movedHistory[0], currentIndex);
   
   movedIndex = moveLeft(tableData, startCol, startRow, robotKey);
   movedCol = movedIndex.col;
   movedRow = movedIndex.row;
-  if(count > 100) {
+  if(count > 1000 || prevFunc === 'ifRight') {
     return true;
   }
   if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-    ifTop(tableData, movedCol, movedRow, robotKey);
+    ifTop(tableData, movedCol, movedRow, robotKey, indexHistory);
     return false;
   } else if (!tableData[movedCol][movedRow].bottom) {
-    ifBottom(tableData, movedCol, movedRow, robotKey);
+    ifBottom(tableData, movedCol, movedRow, robotKey, indexHistory);
     return false;
   }
 }
 
-const ifRight = (tableData, startCol, startRow, robotKey) => {
+const ifRight = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
   let movedIndex;
   let movedCol;
   let movedRow;
   let currentIndex = [startCol, startRow];
+  
+  console.log(indexHistory);
+  console.log('indexHistory', indexHistory);
+  if(indexHistory.filter(e => e === startCol+startRow)){
+    console.log('중복');
+    return;
+  }
+  indexHistory.push(startCol+startRow);
+  prevFunc = 'ifRight';
   count++;
   console.log('right', movedHistory);
   
   movedIndex = moveRight(tableData, startCol, startRow, robotKey);
   movedCol = movedIndex.col;
   movedRow = movedIndex.row;
-  if(count > 100) {
+  if(count > 1000 || prevFunc === 'ifLeft') {
     return true;
   }
   if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
@@ -205,18 +225,27 @@ const ifRight = (tableData, startCol, startRow, robotKey) => {
   }
 }
 
-const ifBottom = (tableData, startCol, startRow, robotKey) => {
+const ifBottom = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
   let movedIndex;
   let movedCol;
   let movedRow;
   let currentIndex = [startCol, startRow];
+
+  console.log(indexHistory);
+  console.log('indexHistory', indexHistory);
+  if(indexHistory.filter(e => e === startCol+startRow)){
+    console.log('중복');
+    return;
+  }
+  indexHistory.push(startCol+startRow);
+  prevFunc = 'ifBottom';
   count++;
   console.log('bottom', movedHistory);
   
   movedIndex = moveBottom(tableData, startCol, startRow, robotKey);
   movedCol = movedIndex.col;
   movedRow = movedIndex.row;
-  if(count > 100) {
+  if(count > 1000 || prevFunc === 'ifTop') {
     return true;
   }
   if (!tableData[movedCol][movedRow].left) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
@@ -227,19 +256,27 @@ const ifBottom = (tableData, startCol, startRow, robotKey) => {
     return false;
   }
 }
-const ifTop = (tableData, startCol, startRow, robotKey) => {
+const ifTop = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
   console.log(count);
   let movedIndex;
   let movedCol;
   let movedRow;
   let currentIndex = [startCol, startRow];
+  console.log(indexHistory);
+  console.log('indexHistory', indexHistory);
+  if(indexHistory.filter(e => e === startCol+startRow)){
+    console.log('중복');
+    return;
+  }
+  indexHistory.push(startCol+startRow);
+  prevFunc = 'ifTop';
   count++;
   console.log('top', movedHistory);
   
   movedIndex = moveTop(tableData, startCol, startRow, robotKey);
   movedCol = movedIndex.col;
   movedRow = movedIndex.row;
-  if(count > 100) {
+  if(count > 1000 || prevFunc === 'ifBottom') {
     return true;
   }
   if (!tableData[movedCol][movedRow].left) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
@@ -253,9 +290,9 @@ const ifTop = (tableData, startCol, startRow, robotKey) => {
 
 let end;
 let count = 0;
+let prevFunc= '';
 export const pathComputing = (table, robotPostions) => {
-  const tableData = JSON.parse(JSON.stringify(table));
-
+  const tableData = JSON.parse(JSON.stringify(table)); //깊은 복사
   console.log('pathComputing',);
   robotPostions.splice(4);
   let isFinding = false;
@@ -279,7 +316,6 @@ export const pathComputing = (table, robotPostions) => {
       end = ifBottom(tableData, startCol, startRow, robotKey);
     }
   }
-
 }
 
 export const walls =
