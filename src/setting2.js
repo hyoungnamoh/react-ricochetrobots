@@ -81,11 +81,17 @@ export const initTableData = (col, row, robotPostions, walls) => {
   return table;
 }
 
-const moveLeft = (tableData, col, row, robotKey, movedData) => {
+const moveLeft = (tableData, col, row, robotKey) => {
   let moveDepth = 1;
   let stop = false;
   let rowIndex = row - moveDepth;
-  console.log(movedData);
+  if(stop) {
+    return;
+  }
+  if(tableData[col][row].isTargetPoint) {
+    stop = true;
+    console.log('find~!', col, row, robotKey);
+  }
 
   // 이동할 위치 index가 0보다 크고, 이동 전 위치에 왼쪽 벽이 없고, stop이 아니면 한칸 이동
   if (rowIndex >= 0 && !tableData[col][row].left && !stop && !tableData[col][rowIndex].isRobotHere) {
@@ -93,10 +99,13 @@ const moveLeft = (tableData, col, row, robotKey, movedData) => {
     tableData[col][rowIndex].robotKey = tableData[col][row].robotKey; // 기존에 있던 로봇 인덱스 복사
     tableData[col][row].isRobotHere = false; // 기존에 있던 로봇 삭제
     tableData[col][row].robotKey = 0; // 기존에 있던 로봇 인덱스 삭제
-    return moveLeft(tableData, col, rowIndex, robotKey, movedData);
+    return moveLeft(tableData, col, rowIndex, robotKey);
   } else {
     stop = true;
-    console.log(movedData);
+    // if(movedHistory.length > 1) {
+    //   movedHistory.splice(0, 1);
+    // }
+    // movedHistory.push([col, row]);
     return { col, row, robotKey };
   }
 }
@@ -104,10 +113,10 @@ const moveTop = (tableData, col, row, robotKey) => {
   let moveDepth = 1;
   let stop = false;
   let colIndex = col - moveDepth;
-  if (stop) {
+  if(stop) {
     return;
   }
-  if (tableData[col][row].isTargetPoint) {
+  if(tableData[col][row].isTargetPoint) {
     stop = true;
     console.log('find~!', col, row, robotKey);
   }
@@ -129,10 +138,10 @@ const moveBottom = (tableData, col, row, robotKey) => {
   let moveDepth = 1;
   let stop = false;
   let colIndex = col + moveDepth;
-  if (stop) {
+  if(stop) {
     return;
   }
-  if (tableData[col][row].isTargetPoint) {
+  if(tableData[col][row].isTargetPoint) {
     stop = true;
     console.log('find~!', col, row, robotKey);
   }
@@ -152,10 +161,10 @@ const moveRight = (tableData, col, row, robotKey) => {
   let moveDepth = 1;
   let stop = false;
   let rowIndex = row + moveDepth;
-  if (stop) {
+  if(stop) {
     return;
   }
-  if (tableData[col][row].isTargetPoint) {
+  if(tableData[col][row].isTargetPoint) {
     stop = true;
     console.log('find~!', col, row, robotKey);
   }
@@ -172,14 +181,23 @@ const moveRight = (tableData, col, row, robotKey) => {
 }
 
 
-const ifLeft = (tableData, startCol, startRow, robotKey, movedData) => {
+const ifLeft = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
   let movedIndex;
   let movedCol;
   let movedRow;
 
+  //이부분
+  if (indexHistory.includes(startCol + startRow)) {
+    // console.log('중복', indexHistory, startCol + startRow);
+    return;
+  } else {
+    indexHistory.push(startCol + startRow);
+    // console.log('indexHistory', indexHistory, startCol + startRow);
+
+
     count++;
 
-    movedIndex = moveLeft(tableData, startCol, startRow, robotKey, movedData);
+    movedIndex = moveLeft(tableData, startCol, startRow, robotKey);
     movedCol = movedIndex.col;
     movedRow = movedIndex.row;
 
@@ -192,7 +210,7 @@ const ifLeft = (tableData, startCol, startRow, robotKey, movedData) => {
     } else if (!tableData[movedCol][movedRow].bottom) {
       ifBottom(tableData, movedCol, movedRow, robotKey, indexHistory);
       return false;
-    } else if (!tableData[movedCol][movedRow].right) {
+    } else if (!tableData[movedCol][movedRow].right){
       ifRight(tableData, movedCol, movedRow, robotKey, indexHistory);
     }
   }
@@ -226,7 +244,7 @@ const ifRight = (tableData, startCol, startRow, robotKey, indexHistory = []) => 
     } else if (!tableData[movedCol][movedRow].bottom) {
       ifBottom(tableData, movedCol, movedRow, robotKey, indexHistory);
       return false;
-    } else if (!tableData[movedCol][movedRow].left) {
+    } else if (!tableData[movedCol][movedRow].left){
       ifLeft(tableData, movedCol, movedRow, robotKey, indexHistory);
     }
   }
@@ -260,7 +278,7 @@ const ifBottom = (tableData, startCol, startRow, robotKey, indexHistory = []) =>
     } else if (!tableData[movedCol][movedRow].right) {
       ifRight(tableData, movedCol, movedRow, robotKey, indexHistory);
       return false;
-    } else if (!tableData[movedCol][movedRow].left) {
+    } else if (!tableData[movedCol][movedRow].left){
       ifTop(tableData, movedCol, movedRow, robotKey, indexHistory);
     }
   }
@@ -293,7 +311,7 @@ const ifTop = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
     } else if (!tableData[movedCol][movedRow].right) {
       ifRight(tableData, movedCol, movedRow, robotKey, indexHistory);
       return false;
-    } else if (!tableData[movedCol][movedRow].left) {
+    } else if (!tableData[movedCol][movedRow].left){
       ifBottom(tableData, movedCol, movedRow, robotKey, indexHistory);
     }
   }
@@ -305,62 +323,29 @@ let count = 0;
 let prevFunc = '';
 export const pathComputing = (table, robotPostions) => {
   const tableData = JSON.parse(JSON.stringify(table)); //깊은 복사
-  const movedData = [];
   console.log('pathComputing',);
   robotPostions.splice(4);
   //시작점
   let startCol;
   let startRow;
+
+  //혼자 돌아다녔을 때 갈 수 있는 위치 찾기
   for (let i = 0; i < 4; i++) {
     startCol = robotPostions[i][0];
     startRow = robotPostions[i][1];
     const robotKey = tableData[startCol][startRow].robotKey;
     if (!tableData[startCol][startRow].left) { // 각 첫번째 로봇부터 왼쪽 벽이 없으면 왼쪽으로 쭉 이동
-      ifLeft(tableData, startCol, startRow, robotKey, movedData);
-    } 
-    // let movedIndex = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    // console.log(movedIndex);
-    // if (!movedIndex.top) {
-    //   let movedIndex2 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex2.left) {
-    //     if (!movedIndex2.top) {
-    //       let movedIndex5 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //     if (!movedIndex2.bottom) {
-    //       let movedIndex6 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //     if (!movedIndex2.right) {
-    //       let movedIndex7 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //   }
-    // }
-    // if (!movedIndex.bottom) {
-    //   let movedIndex3 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex3.top) {
-    //     let movedIndex8 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex3.bottom) {
-    //     let movedIndex9 = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    //   }
-    //   if (!movedIndex3.right) {
-    //     let movedIndex10 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    // }
-    // if (!movedIndex.right) {
-    //   let movedIndex4 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex4.top) {
-    //     let movedIndex11 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex4.bottom) {
-    //     let movedIndex12 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex4.left) {
-    //     let movedIndex13 = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    //   }
-    // }
+      end = ifLeft(tableData, startCol, startRow, robotKey);
+    } else if (!tableData[startCol][startRow].right) {
+      end = ifRight(tableData, startCol, startRow, robotKey);
+    } else if (!tableData[startCol][startRow].top) {
+      end = ifTop(tableData, startCol, startRow, robotKey);
+    } else if (!tableData[startCol][startRow].bottom) {
+      end = ifBottom(tableData, startCol, startRow, robotKey);
+    }
   }
 
-
+  //하나씩 돌려보기
 
 }
 
