@@ -177,26 +177,26 @@ const ifLeft = (tableData, startCol, startRow, robotKey, movedData) => {
   let movedCol;
   let movedRow;
 
-    count++;
+  movedData.push();
+  count++;
 
-    movedIndex = moveLeft(tableData, startCol, startRow, robotKey, movedData);
-    movedCol = movedIndex.col;
-    movedRow = movedIndex.row;
+  movedIndex = moveLeft(tableData, startCol, startRow, robotKey, movedData);
+  movedCol = movedIndex.col;
+  movedRow = movedIndex.row;
+  movedData.push();
 
-    if (count > 1000) {
-      return true;
-    }
-    if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
-      ifTop(tableData, movedCol, movedRow, robotKey, indexHistory);
-      return false;
-    } else if (!tableData[movedCol][movedRow].bottom) {
-      ifBottom(tableData, movedCol, movedRow, robotKey, indexHistory);
-      return false;
-    } else if (!tableData[movedCol][movedRow].right) {
-      ifRight(tableData, movedCol, movedRow, robotKey, indexHistory);
-    }
+  if (count > 1000) {
+    return true;
   }
-
+  // if (!tableData[movedCol][movedRow].top) { // 쭉 이동한 위치에서 윗쪽 벽이 없으면 위로 쭉 이동, (오른쪽은 할 필요 없는 듯)
+  //   ifTop(tableData, movedCol, movedRow, robotKey, movedData);
+  //   return false;
+  // } else if (!tableData[movedCol][movedRow].bottom) {
+  //   ifBottom(tableData, movedCol, movedRow, robotKey, movedData);
+  //   return false;
+  // } else if (!tableData[movedCol][movedRow].right) {
+  //   ifRight(tableData, movedCol, movedRow, robotKey, movedData);
+  // }
 }
 
 const ifRight = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
@@ -300,7 +300,7 @@ const ifTop = (tableData, startCol, startRow, robotKey, indexHistory = []) => {
 
 }
 
-let end;
+let start = true;
 let count = 0;
 let prevFunc = '';
 export const pathComputing = (table, robotPostions) => {
@@ -311,53 +311,29 @@ export const pathComputing = (table, robotPostions) => {
   //시작점
   let startCol;
   let startRow;
+  while (start) {
+    for (let i = 0; i < 4; i++) {
+      startCol = robotPostions[i][0];
+      startRow = robotPostions[i][1];
+      const robotKey = tableData[startCol][startRow].robotKey;
+      if (!tableData[startCol][startRow].left) {
+        moveLeft(tableData, startCol, startRow, robotKey, movedData);
+      } else if (!tableData[startCol][startRow].right) {
+        moveRight(tableData, startCol, startRow, robotKey, movedData);
+      } else if (!tableData[startCol][startRow].top) {
+        moveTop(tableData, startCol, startRow, robotKey, movedData);
+      } else if (!tableData[startCol][startRow].bottom) {
+        moveBottom(tableData, startCol, startRow, robotKey, movedData);
+      }
+    }
+  }
   for (let i = 0; i < 4; i++) {
     startCol = robotPostions[i][0];
     startRow = robotPostions[i][1];
     const robotKey = tableData[startCol][startRow].robotKey;
     if (!tableData[startCol][startRow].left) { // 각 첫번째 로봇부터 왼쪽 벽이 없으면 왼쪽으로 쭉 이동
       ifLeft(tableData, startCol, startRow, robotKey, movedData);
-    } 
-    // let movedIndex = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    // console.log(movedIndex);
-    // if (!movedIndex.top) {
-    //   let movedIndex2 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex2.left) {
-    //     if (!movedIndex2.top) {
-    //       let movedIndex5 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //     if (!movedIndex2.bottom) {
-    //       let movedIndex6 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //     if (!movedIndex2.right) {
-    //       let movedIndex7 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //     }
-    //   }
-    // }
-    // if (!movedIndex.bottom) {
-    //   let movedIndex3 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex3.top) {
-    //     let movedIndex8 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex3.bottom) {
-    //     let movedIndex9 = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    //   }
-    //   if (!movedIndex3.right) {
-    //     let movedIndex10 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    // }
-    // if (!movedIndex.right) {
-    //   let movedIndex4 = moveRight(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   if (!movedIndex4.top) {
-    //     let movedIndex11 = moveTop(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex4.bottom) {
-    //     let movedIndex12 = moveBottom(tableData, startCol, startRow, robotKey); //col, row, robotkey
-    //   }
-    //   if (!movedIndex4.left) {
-    //     let movedIndex13 = moveLeft(tableData, startCol, startRow, robotKey, movedData); //col, row, robotkey
-    //   }
-    // }
+    }
   }
 
 
